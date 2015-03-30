@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views.generic.edit import CreateView
+from .models import Station
 
-# Create your views here.
+class StationCreate(CreateView):
+    model = Station
+    fields = ["name","address","owner","members"]
