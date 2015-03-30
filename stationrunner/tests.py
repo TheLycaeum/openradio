@@ -10,6 +10,14 @@ class TestStationCreate(TestCase):
         """
         response = self.client.get(reverse("createstation"))
         self.assertEqual(response.status_code, 200)
+    def test_contains_required_fields(self):
+        """
+        Tests if the page for creation of a station contains the required fields
+        """
+        response = self.client.get(reverse("createstation"))
+        self.assertIn("station.name", response.context)
+        self.assertIn("station.address", response.context)
+        self.assertIn("station.owner", response.context)
         
         
         
