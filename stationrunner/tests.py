@@ -15,9 +15,8 @@ class TestStationCreate(TestCase):
         Tests if the page for creation of a station contains the required fields
         """
         response = self.client.get(reverse("createstation"))
-        self.assertIn("station.name", response.context)
-        self.assertIn("station.address", response.context)
-        self.assertIn("station.owner", response.context)
+        self.assertIn("name", response.content)
+        self.assertIn("address", response.content)
         
         
         
