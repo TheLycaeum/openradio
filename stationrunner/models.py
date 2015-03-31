@@ -1,11 +1,10 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 class Station(models.Model):
     name = models.CharField(max_length=50)
     address = models.TextField(default='')
-    owner = models.ForeignKey('User',default='')
     
-class User(models.Model):
-    name = models.CharField(max_length=50)
-    age = models.PositiveIntegerField()
-    email = models.EmailField()
+    def get_absolute_url(self):
+        return reverse("viewstation", kwargs={"pk": self.pk})
+        

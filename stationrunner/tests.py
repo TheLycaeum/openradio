@@ -31,7 +31,7 @@ class TestStationCreate(TestCase):
                                     {"name": name, "address": address},
                                     follow=True)
         self.assertIn("station", response.context)
-        s = response.context["link"]
+        s = response.context["station"]
         s.name = name
         s.address = address
 
