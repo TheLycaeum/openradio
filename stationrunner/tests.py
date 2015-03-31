@@ -12,12 +12,28 @@ class TestStationCreate(TestCase):
         self.assertEqual(response.status_code, 200)
     def test_contains_required_fields(self):
         """
-        Tests if the page for creation of a station contains a form and the required fields
+        Tests if the page for creation of a station contains a form and
+        the required fields
         """
         response = self.client.get(reverse("createstation"))
         self.assertIn("form", response.context)
         self.assertIn("name", response.content)
         self.assertIn("address", response.content)
+    def test_submission_form_creates_station_object(self):
+        """
+        Tests if submission of the form on page for creation of a 
+        station creates a station object and its attributes take the 
+        submitted values
+        """
+        name = "examplename"
+        address = "exampleaddress"
+        response = self.client.post(reverse("createstation"),
+                                    {"name": name, "address": address},
+                                    follow=True)
+        self.assertIn("station", response.context)
+        s = response.context["link"]
+        s.name = name
+        s.address = address
 
         
         
