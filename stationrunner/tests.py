@@ -85,3 +85,13 @@ class TestStationEdit(TestCase):
         assert edited_s.name == "editedname"
         assert edited_s.address == "editedaddress"
         assert s.id == edited_s.id
+
+class TestListStations(TestCase):
+    def test_page_exists(self):
+        """
+        Checks if a page exists at the desired URL for listing all the
+        stations.
+        """
+        response = self.client.get(reverse("liststations"))
+        assert response.status_code == 200
+        
