@@ -39,7 +39,12 @@ class TestStationEdit(TestCase):
         """
         Tests if a page exists for editing a created station
         """
-        response = self.client.get(reverse("editstation"))
-        assert response.status_code == 200
-        
+        name = "examplename"
+        address = "exampleaddress"
+        response = self.client.post(reverse("createstation"),
+                                    {"name": name, "address": address},
+                                    follow=True)
+        s = response.context["station"]
+        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
+        assert response_two.status_code == 200        
         
