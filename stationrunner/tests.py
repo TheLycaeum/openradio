@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from .models import Station
 
 
 class TestStationCreate(TestCase):
@@ -94,4 +95,25 @@ class TestListStations(TestCase):
         """
         response = self.client.get(reverse("liststations"))
         assert response.status_code == 200
+        
+    def test_page_lists_stations(self):
+        """
+        Checks if page for listing all the stations actually lists them
+        """
+        s1 = Station(name="name1",address="address1")
+        s1.save()
+        s2 = Station(name="name2",address="address2")
+        s2.save()
+        s3 = Station(name="name3",address="address3")
+        s3.save()
+        response = self.client.get(reverse("liststations"),
+                                   follow=True)
+        assert s1.name in response.content
+        assert s1.address in response.content
+        assert s2.name in response.content
+        assert s2.address in response.content
+        assert s3.name in response.content
+        assert s3.address in response.content
+
+        
         
