@@ -34,7 +34,12 @@ class TestStationCreate(TestCase):
         assert s.name == name
         assert s.address == address
 
-        
-        
+class TestStationEdit(TestCase):
+    def test_page_exists(self):
+        """
+        Tests if a page exists for editing a created station
+        """
+        response = self.client.get(reverse("editstation"))
+        assert response.status_code == 200
         
         
