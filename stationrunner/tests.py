@@ -46,5 +46,22 @@ class TestStationEdit(TestCase):
                                     follow=True)
         s = response.context["station"]
         response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
-        assert response_two.status_code == 200        
+        assert response_two.status_code == 200  
+    
+    def test_contains_required_fields(self):
+        """
+        Tests if the page for editing a station contains a form and
+        the required fields containing values from the station object to be 
+        edited
+        """
+        name = "examplename"
+        address = "exampleaddress"
+        response = self.client.post(reverse("createstation"),
+                                    {"name": name, "address": address},
+                                    follow=True)
+        s = response.context["station"]
+        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
+        assert "form" in response_two.context
+        assert s.name in response_two.content
+        assert s.address in response_two.content
         
