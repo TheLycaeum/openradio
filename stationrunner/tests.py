@@ -25,8 +25,8 @@ class TestStationCreate(TestCase):
         station creates a station object and its attributes take the 
         submitted values
         """
-        name = "examplename"
-        address = "exampleaddress"
+        name = "anyname"
+        address = "anyaddress"
         response = self.client.post(reverse("createstation"),
                                     {"name": name, "address": address},
                                     follow=True)
@@ -40,12 +40,8 @@ class TestStationEdit(TestCase):
         """
         Tests if a page exists for editing a created station
         """
-        name = "examplename"
-        address = "exampleaddress"
-        response = self.client.post(reverse("createstation"),
-                                    {"name": name, "address": address},
-                                    follow=True)
-        s = response.context["station"]
+        s = Station(name="anyname",address="anyddress")
+        s.save()
         response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
         assert response_two.status_code == 200  
     
@@ -55,12 +51,8 @@ class TestStationEdit(TestCase):
         the required fields containing values from the station object to be 
         edited
         """
-        name = "examplename"
-        address = "exampleaddress"
-        response = self.client.post(reverse("createstation"),
-                                    {"name": name, "address": address},
-                                    follow=True)
-        s = response.context["station"]
+        s = Station(name="anyname",address="anyddress")
+        s.save()
         response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
         assert "form" in response_two.context
         assert s.name in response_two.content
@@ -72,12 +64,8 @@ class TestStationEdit(TestCase):
         existing station object saves the object into db with the
         attributes overwritten with the new values.
         """
-        name = "examplename"
-        address = "exampleaddress"
-        response = self.client.post(reverse("createstation"),
-                                    {"name": name, "address": address},
-                                    follow=True)
-        s = response.context["station"]
+        s = Station(name="anyname",address="anyddress")
+        s.save()
         response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))                            
         response_three = self.client.post(reverse("editstation", kwargs={'id':s.id}),
                                           {"name": "editedname", "address": "editedaddress"},
