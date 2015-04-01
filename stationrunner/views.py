@@ -1,5 +1,6 @@
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView
 from .models import Station
 
 class StationCreate(CreateView):
@@ -15,3 +16,13 @@ class StationCreate(CreateView):
 
 class StationView(DetailView):
     model = Station
+
+class StationEdit(UpdateView):
+    model = Station
+    fields = ["name","address"]
+    template_name_suffix = '_edit_form'
+
+    def get_object(self, queryset=None):
+        obj = Station.objects.get(id=self.kwargs['id'])
+        return obj
+    
