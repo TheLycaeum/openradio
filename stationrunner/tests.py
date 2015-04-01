@@ -42,7 +42,7 @@ class TestStationEdit(TestCase):
         """
         s = Station(name="anyname",address="anyddress")
         s.save()
-        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
+        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
         assert response_two.status_code == 200  
     
     def test_contains_required_fields(self):
@@ -53,7 +53,7 @@ class TestStationEdit(TestCase):
         """
         s = Station(name="anyname",address="anyddress")
         s.save()
-        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))
+        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
         assert "form" in response_two.context
         assert s.name in response_two.content
         assert s.address in response_two.content
@@ -66,8 +66,8 @@ class TestStationEdit(TestCase):
         """
         s = Station(name="anyname",address="anyddress")
         s.save()
-        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))                            
-        response_three = self.client.post(reverse("editstation", kwargs={'id':s.id}),
+        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))                            
+        response_three = self.client.post(reverse("editstation", kwargs={'pk':s.pk}),
                                           {"name": "editedname", "address": "editedaddress"},
                                           follow=True)
         edited_s = response_three.context["station"]

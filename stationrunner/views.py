@@ -15,7 +15,7 @@ class StationCreate(CreateView):
             return redirect("viewstation", pk=prev[0].pk)
         return super(StationCreate, self).form_valid(form)
 
-class StationView(DetailView):
+class StationHome(DetailView):
     model = Station
 
 class StationEdit(UpdateView):
@@ -24,7 +24,7 @@ class StationEdit(UpdateView):
     template_name_suffix = '_edit_form'
 
     def get_object(self, queryset=None):
-        obj = Station.objects.get(id=self.kwargs['id'])
+        obj = Station.objects.get(pk=self.kwargs['pk'])
         return obj
     
 class ListStations(ListView):
