@@ -1,6 +1,7 @@
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
+from django.views.generic.list import ListView
 from .models import Station
 
 class StationCreate(CreateView):
@@ -26,3 +27,5 @@ class StationEdit(UpdateView):
         obj = Station.objects.get(id=self.kwargs['id'])
         return obj
     
+class ListStations(ListView):
+    model = Station

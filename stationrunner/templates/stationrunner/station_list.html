@@ -1,0 +1,8 @@
+<h1>Stations</h1>
+<ul>
+{% for station in object_list %}
+    <li>{{ article.id }} {{ article.name }} {{ article.address }}</li>
+{% empty %}
+    <li>No stations yet.</li>
+{% endfor %}
+</ul>
