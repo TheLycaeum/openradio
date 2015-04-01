@@ -65,3 +65,23 @@ class TestStationEdit(TestCase):
         assert s.name in response_two.content
         assert s.address in response_two.content
         
+    def test_submission_form_edits_station_object(self):
+        """
+        Tests if submission of the form on page for editing an
+        existing station object saves the object into db with the
+        attributes overwritten with the new values.
+        """
+        name = "examplename"
+        address = "exampleaddress"
+        response = self.client.post(reverse("createstation"),
+                                    {"name": name, "address": address},
+                                    follow=True)
+        s = response.context["station"]
+        response_two = self.client.get(reverse("editstation", kwargs={'id':s.id}))                            
+        response_three = self.client.post(reverse("editstation", kwargs={'id':s.id}),
+                                          {"name": "editedname", "address": "editedaddress"},
+                                          follow=True)
+        edited_s = response_three.context["station"]
+        assert edited_s.name == "editedname"
+        assert edited_s.address == "editedaddress"
+        assert s.id == edited_s.id
