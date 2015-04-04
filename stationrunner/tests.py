@@ -110,5 +110,17 @@ class TestUserSignUp(TestCase):
         """
         response = self.client.get(reverse("userregistration"))
         assert response.status_code == 200
+    def test_contains_required_fields(self):
+        """
+        Tests if the page for user registration contains a form and
+        the required fields
+        """
+        response = self.client.get(reverse("userregistration"))
+        assert "form" in response.context
+        assert "first_name" in response.content
+        assert "last_name" in response.content
+        assert "email" in response.content
+        assert "username" in response.content
+        assert "password" in response.content
     
         
