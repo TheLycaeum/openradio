@@ -106,9 +106,9 @@ class TestListStations(TestCase):
 class TestUserSignUp(TestCase):
     def test_page_exists(self):
         """
-        Checks if a page exists at the desired URL for user signup.
+        Checks if a page exists at the desired URL for user registration.
         """
-        response = self.client.get(reverse("usersignup"))
+        response = self.client.get(reverse("userregistration"))
         assert response.status_code == 200
     
         

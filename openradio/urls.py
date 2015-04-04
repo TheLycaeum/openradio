@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
 from stationrunner.views import StationCreate
 from stationrunner.views import StationHome
 from stationrunner.views import StationEdit
@@ -11,8 +13,11 @@ from stationrunner.views import ListStations
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    #url(r'^', Home.as_view(), name='home')
-    #url(r'^signup/', SignUp.as_view(), name='signup'),    
+    #url(r'^', Home.as_view(), name='home'),
+    url('^registration/', 
+        CreateView.as_view(template_name='register.html',
+                           form_class=UserCreationForm),
+        name='userregistration'),
     #url(r'^(?P<pk>\d+)/', UserHome.as_view(), name='userhome'),
     #url(r'^(?P<pk>\d+)/edit/', UserEdit.as_view(), name='useredit'),
     url(r'^stations/(?P<pk>\d+)/', StationHome.as_view(), name='viewstation'),
