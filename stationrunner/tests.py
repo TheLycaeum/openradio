@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from .models import Station
-
+from django.contrib.auth.models import User
 
 class TestStationCreate(TestCase):
     def test_page_exists(self):
@@ -103,5 +103,12 @@ class TestListStations(TestCase):
         assert s3.name in response.content
         assert s3.address in response.content
 
-        
+class TestUserSignUp(TestCase):
+    def test_page_exists(self):
+        """
+        Checks if a page exists at the desired URL for user signup.
+        """
+        response = self.client.get(reverse("usersignup"))
+        assert response.status_code == 200
+    
         
