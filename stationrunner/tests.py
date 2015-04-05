@@ -122,5 +122,31 @@ class TestUserSignUp(TestCase):
         assert "email" in response.content
         assert "username" in response.content
         assert "password" in response.content
+    def test_submission_form_creates_user_object(self):
+        """
+        Tests if submission of the form on page for creation of a 
+        user creates a station object and its attributes take the 
+        expected values
+        """
+        first_name = "somename"
+        last_name = "somename"
+        email = "someemail@someservice.com"
+        username = "someusername"
+        password = "somepassword"
+        response = self.client.post(reverse("createstation"),
+                                    {"first_name": first_name,
+                                     "last_name": last_name,
+                                     "email": email
+                                     "username":username
+                                     "password":password},
+                                    follow=True)
+        assert "user" in response.context
+        s = response.context["user"]
+        assert s.first_name == first_name
+        assert s.last_name == last_name
+        assert s.email == email
+        assert s.username == username
+        assert s.password == s.set_password(password)
+
     
         
