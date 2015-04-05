@@ -1,0 +1,38 @@
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class UserCreateForm(UserCreationForm):
+    """
+    Extends Django's UserCreationForm
+    """
+    email_exists_message = "A user with that email id already exists."
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField()
+
+    class Meta:
+        model = User
+        fields = ("first_name","last_name","username", "email", "password1", "password2")
+
+    def clean_email(self):
+        # Since User.email is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        email = self.cleaned_data["email"]
+        try:
+            User._default_manager.get(email=email)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(
+            self.email_exists_meassage,
+            code='duplicate_email',
+        )
+
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        if commit:
+            user.save()
+        return user
