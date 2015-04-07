@@ -110,6 +110,15 @@ class TestUserSignUp(TestCase):
         """
         response = self.client.get(reverse("userregistration"))
         assert response.status_code == 200
+        
+    def test_page_holds_user_object(self):
+        """
+        Checks if the page for user registration holds an object of
+        the User model
+        """
+        response = self.client.get(reverse("userregistration"))
+        assert response.context["user"]
+
     def test_contains_required_fields(self):
         """
         Tests if the page for user registration contains a form with
