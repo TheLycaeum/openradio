@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 from os.path import join
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openradio.settings")
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -89,3 +91,7 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
     join(BASE_DIR,  'templates'),
 )
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: u'/{0}/'.format(u.pk)
+}

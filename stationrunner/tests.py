@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from .models import Station
 from django.contrib.auth.models import User
+from .models import Station
 
 class TestStationCreate(TestCase):
     def test_page_exists(self):
@@ -125,7 +125,7 @@ class TestUserSignUp(TestCase):
     def test_submission_form_creates_user_object(self):
         """
         Tests if submission of the form on page for creation of a 
-        user creates a station object and its attributes take the 
+        user creates a user object and its attributes take the 
         expected values
         """
         first_name = "somename"
@@ -133,20 +133,16 @@ class TestUserSignUp(TestCase):
         email = "someemail@someservice.com"
         username = "someusername"
         password = "somepassword"
-        response = self.client.post(reverse("createstation"),
+        response = self.client.post(reverse("userregistration"),
                                     {"first_name": first_name,
                                      "last_name": last_name,
-                                     "email": email
-                                     "username":username
-                                     "password":password},
+                                     "email": email,
+                                     "username": username,
+                                     "password1": password,
+                                     "password2": password},
                                     follow=True)
-        assert "user" in response.context
-        s = response.context["user"]
-        assert s.first_name == first_name
-        assert s.last_name == last_name
-        assert s.email == email
-        assert s.username == username
-        assert s.password == s.set_password(password)
-
+        assert User.objects.get(username=username)
+        user = User.objects.get(username=username)
+        
     
         

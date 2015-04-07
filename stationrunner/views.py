@@ -2,8 +2,46 @@ from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from .models import Station
+from .forms import UserCreateForm
 
+class UserRegistration(CreateView):
+            
+    template_name='auth/register.html'
+    form_class=UserCreateForm
+
+    def auth_login(self, request, username, password):
+        '''
+        Authenticate always needs to be called before login because it
+        adds which backend did the authentication which is required by login.
+        '''
+
+        user = authenticate(username=username, password=password)
+        login(request, user)
+
+    def form_valid(self, form):
+        '''
+        Overwrite form_valid to login.
+        '''
+
+        #save the user
+        response = super(UserRegistration, self).form_valid(form)
+
+        #Get the user creditials
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password1']
+
+        #authenticate and login
+        self.auth_login(self.request, username, password)
+
+        return response
+
+class UserHome(DetailView):
+    model = User
+    template_name_suffix = "_home"
+    
 class StationCreate(CreateView):
     model = Station
     fields = ["name","address"]

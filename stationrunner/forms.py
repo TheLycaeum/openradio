@@ -13,18 +13,16 @@ class UserCreateForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("first_name","last_name","username", "email", "password1", "password2")
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
 
     def clean_email(self):
-        # Since User.email is unique, this check is redundant,
-        # but it sets a nicer error message than the ORM. See #13147.
         email = self.cleaned_data["email"]
-        try:
+        try: 
             User._default_manager.get(email=email)
         except User.DoesNotExist:
-            return username
+            return email
         raise forms.ValidationError(
-            self.email_exists_meassage,
+            self.email_exists_message,
             code='duplicate_email',
         )
 
@@ -36,3 +34,4 @@ class UserCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
+        

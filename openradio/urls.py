@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic.edit import CreateView
-from stationrunner.forms import UserCreateForm
+from stationrunner.views import UserRegistration
+from stationrunner.views import UserHome
 from stationrunner.views import StationCreate
 from stationrunner.views import StationHome
 from stationrunner.views import StationEdit
@@ -12,14 +13,11 @@ from stationrunner.views import ListStations
 
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
+    #url(r'^admin/', include(admin.site.urls)),
     #url(r'^', Home.as_view(), name='home'),
-    url('^registration/', 
-        CreateView.as_view(template_name='register.html',
-                           form_class=UserCreateForm),
-        name='userregistration'),
-    #url(r'^(?P<pk>\d+)/', UserHome.as_view(), name='userhome'),
-    #url(r'^(?P<pk>\d+)/edit/', UserEdit.as_view(), name='useredit'),
+    url('^registration/', UserRegistration.as_view( ), name='userregistration'),
+    url(r'^(?P<pk>\d+)/', UserHome.as_view(), name='userhome'),
+    #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
     url(r'^stations/(?P<pk>\d+)/', StationHome.as_view(), name='viewstation'),
     url(r'^stations/create', StationCreate.as_view(), name='createstation'),
     url(r'^stations/edit/(?P<pk>\d+)/', StationEdit.as_view(), name='editstation'),
@@ -28,4 +26,4 @@ urlpatterns = patterns('',
     #url(r'^channels/create', ChannelCreate.as_view(), name='createchannel'),
     #url(r'^channels/edit/(?P<pk>\d+)/', ChannelEdit.as_view(), name='editchannel'),
 
-)
+)       
