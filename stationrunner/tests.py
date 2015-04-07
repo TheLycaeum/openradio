@@ -130,7 +130,9 @@ class TestUserSignUp(TestCase):
         assert "last_name" in response.content
         assert "email" in response.content
         assert "username" in response.content
-        assert "password" in response.content
+        assert "password1" in response.content #password
+        assert "password2" in response.content #password confirmation
+    
     def test_submission_form_creates_user_object(self):
         """
         Tests if submission of the form on page for creation of a 
