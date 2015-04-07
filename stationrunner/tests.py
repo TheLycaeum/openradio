@@ -189,5 +189,45 @@ class TestUserSignUp(TestCase):
             if user.username == username1:
                 users_with_username1 += 1
         assert users_with_username1 == 1
+
+    def test_no_two_users_can_have_same_email(self):
+        """
+        Tests if duplicate email will be rejected by the page
+        """
+        first_name1 = "somename"
+        last_name1 = "somename"
+        email1 = "someemail@someservice.com"
+        username1 = "someusername"
+        password1 = "somepassword"
+        response1 = self.client.post(reverse("userregistration"),
+                                    {"first_name": first_name1,
+                                     "last_name": last_name1,
+                                     "email": email1,
+                                     "username": username1,
+                                     "password1": password1,
+                                     "password2": password1},
+                                    follow=True)
+        first_name2 = "someothername"
+        last_name2 = "someothername"
+        username2 = "someotherusername"
+        password2 = "someotherpasswordd"
+        response2 = self.client.post(reverse("userregistration"),
+                                    {"first_name": first_name2,
+                                     "last_name": last_name2,
+                                     "email": email1,       # same email
+                                     "username": username2, 
+                                     "password1": password2,
+                                     "password2": password2},
+                                    follow=True)
+        users_with_email1 = 0
+        for user in User.objects.all():
+            if user.email == email1:
+                users_with_email1 += 1
+        assert users_with_email1 == 1
+        users_with_email1 = 0
+        for user in User.objects.all():
+            if user.email == email1:
+                users_with_email1 += 1
+        assert users_with_email1 == 1
     
         
