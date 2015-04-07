@@ -230,4 +230,23 @@ class TestUserSignUp(TestCase):
                 users_with_email1 += 1
         assert users_with_email1 == 1
     
-        
+    def test_registration_also_signs_user_in(self):
+        """
+        Assures that registration signs in the user too
+        """
+        first_name = "somename"
+        last_name = "somename"
+        email = "someemail@someservice.com"
+        username = "someusername"
+        password = "somepassword"
+        response = self.client.post(reverse("userregistration"),
+                                    {"first_name": first_name,
+                                     "last_name": last_name,
+                                     "email": email,
+                                     "username": username,
+                                     "password1": password,
+                                     "password2": password},
+                                    follow=True)
+        user = response.context["user"]
+        assert user.is_authenticated()
+                
