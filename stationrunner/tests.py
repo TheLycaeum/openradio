@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from .models import Station
+from .models import Channel
 
 class TestStationCreate(TestCase):
     def test_page_exists(self):
