@@ -283,3 +283,14 @@ class TestChannelCreate(TestCase):
         c = response.context["channel"]
         assert c.c_name == c_name
         assert c.c_frequency == c_frequency
+
+
+class TestStationEdit(TestCase):
+    def test_channe_page_exists(self):
+        """
+        Tests if a channel page exists for editing a created channel
+        """
+        c = Channel(c_name="anyname",c_frequency="anyfrequency")
+        c.save()
+        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
+        assert response_two.status_code == 200  
