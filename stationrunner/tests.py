@@ -258,3 +258,13 @@ class TestChannelCreate(TestCase):
         """
         response = self.client.get(reverse("createchannel"))
         assert response.status_code == 200
+
+    def test_channel_contains_required_fields(self):
+        """
+        Tests if the channel page of a channel contains a form and
+        the required fields
+        """
+        response = self.client.get(reverse("createchannel"))
+        assert "form" in response.context
+        assert "c_name" in response.content
+        assert "c_frequency" in response.content
