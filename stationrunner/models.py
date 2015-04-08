@@ -11,3 +11,6 @@ class Station(models.Model):
 class Channel(models.Model):
     c_name = models.CharField(max_length=50)
     c_frequency = models.CharField(max_length=50)
+
+    def get_absolute_url(self):
+        return reverse("viewchannel", kwargs={"pk": self.pk})
