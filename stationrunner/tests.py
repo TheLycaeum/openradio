@@ -285,7 +285,7 @@ class TestChannelCreate(TestCase):
         assert c.c_frequency == c_frequency
 
 
-class TestStationEdit(TestCase):
+class TestChannelEdit(TestCase):
     def test_channe_page_exists(self):
         """
         Tests if a channel page exists for editing a created channel
@@ -307,3 +307,20 @@ class TestStationEdit(TestCase):
         assert "form" in response_two.context
         assert c.c_name in response_two.content
         assert c.c_frequency in response_two.content
+
+    def test_channel_submission_form_edits_channel_object(self):
+        """
+        Tests if channel form submission of page for editing an
+        existing channel object saves the object in db with
+        attributes overwritten.
+        """
+        c = Channel(c_name="anyname",c_frequency="anyfrequency")
+        c.save()
+        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))                            
+        response_three = self.client.post(reverse("editchannel", kwargs={'pk':c.pk}),
+                                          {"c_name": "editedname", "c_frequency": "editedfrequency"},
+                                          follow=True)
+        edited_c = response_three.context["channel"]
+        assert edited_c.c_name == "editedname"
+        assert edited_c.c_frequency == "editedfrequency"
+        assert c.id == edited_c.id
