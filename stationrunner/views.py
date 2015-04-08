@@ -79,3 +79,6 @@ class ChannelCreate(CreateView):
         if prev:
             return redirect("viewchannel", pk=prev[0].pk)
         return super(ChannelCreate, self).form_valid(form)
+
+class ChannelHome(DetailView):
+    model = Channel
