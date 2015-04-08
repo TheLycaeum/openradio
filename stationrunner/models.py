@@ -8,3 +8,6 @@ class Station(models.Model):
     def get_absolute_url(self):
         return reverse("viewstation", kwargs={"pk": self.pk})
         
+class Channel(models.Model):
+    c_name = models.CharField(max_length=50)
+    c_frequency = models.CharField(max_length=50)
