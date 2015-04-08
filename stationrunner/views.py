@@ -91,3 +91,6 @@ class ChannelEdit(UpdateView):
     def get_object(self, queryset=None):
         obj = Channel.objects.get(pk=self.kwargs['pk'])
         return obj
+
+class ListChannels(ListView):
+    model = Channel
