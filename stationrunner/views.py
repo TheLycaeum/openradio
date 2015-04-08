@@ -82,3 +82,12 @@ class ChannelCreate(CreateView):
 
 class ChannelHome(DetailView):
     model = Channel
+
+class ChannelEdit(UpdateView):
+    model = Channel
+    fields = ["c_name","c_frequency"]
+    template_name_suffix = '_edit_form'
+
+    def get_object(self, queryset=None):
+        obj = Channel.objects.get(pk=self.kwargs['pk'])
+        return obj
