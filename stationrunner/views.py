@@ -4,7 +4,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from .models import Station
+from .models import Station, Channel
 from .forms import UserCreateForm
 
 class UserRegistration(CreateView):
@@ -67,3 +67,15 @@ class StationEdit(UpdateView):
     
 class ListStations(ListView):
     model = Station
+
+
+class ChannelCreate(CreateView):
+    model = Channel
+    fields = ["c_name","c_frequency"]
+
+    def form_valid(self, form):
+        # Check if the station object already exists
+        prev = Channel.objects.filter(name=form.instance.name)
+        if prev:
+            return redirect("viewchannel", pk=prev[0].pk)
+        return super(ChannelCreate, self).form_valid(form)
