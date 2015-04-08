@@ -268,3 +268,18 @@ class TestChannelCreate(TestCase):
         assert "form" in response.context
         assert "c_name" in response.content
         assert "c_frequency" in response.content
+
+    def test_submission_form_creates_channel_object(self):
+        """
+        Tests if submission of page form creates a channel object and
+        its attributes take the submitted values
+        """
+        c_name = "anyname"
+        c_frequency = "anyaddress"
+        response = self.client.post(reverse("createchannel"),
+                                    {"c_name": c_name, "c_frequency": c_frequency},
+                                    follow=True)
+        assert "channel" in response.context
+        c = response.context["channel"]
+        assert c.c_name == c_name
+        assert c.c_frequency == c_frequency
