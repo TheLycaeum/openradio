@@ -250,3 +250,10 @@ class TestUserSignUp(TestCase):
         user = response.context["user"]
         assert user.is_authenticated()
                 
+class TestChannelCreate(TestCase):
+    def test_channel_page_exists(self):
+        """
+        Tests if channel creation page exists
+        """
+        response = self.client.get(reverse("createchannel"))
+        assert response.status_code == 200
