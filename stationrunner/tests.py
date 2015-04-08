@@ -293,4 +293,17 @@ class TestStationEdit(TestCase):
         c = Channel(c_name="anyname",c_frequency="anyfrequency")
         c.save()
         response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
-        assert response_two.status_code == 200  
+        assert response_two.status_code == 200
+
+    def test_channel_contains_required_fields(self):
+        """
+        Tests if the page for editing a channel contains a form and
+        the required fields containing values from the channel object to be 
+        edited
+        """
+        c = Channel(c_name="anyname",c_frequency="anyfrequency")
+        c.save()
+        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
+        assert "form" in response_two.context
+        assert c.c_name in response_two.content
+        assert c.c_frequency in response_two.content
