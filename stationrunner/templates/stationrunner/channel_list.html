@@ -1,0 +1,8 @@
+<h1>Channels</h1>
+<ul>
+{% for channel in object_list %}
+    <li>{{ channel.id }} {{ channel.c_name }} {{ channel.c_frequency }}</li>
+{% empty %}
+    <li>No Channels yet.</li>
+{% endfor %}
+</ul>
