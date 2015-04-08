@@ -9,7 +9,7 @@ from stationrunner.views import StationEdit
 from stationrunner.views import ListStations
 from stationrunner.views import ChannelCreate
 from stationrunner.views import ChannelHome
-#from stationrunner.views import ChannelEdit
+from stationrunner.views import ChannelEdit
 #from stationrunner.views import ChannelManage
 
 
@@ -26,6 +26,6 @@ urlpatterns = patterns('',
     url(r'^channels/(?P<pk>\d+)/', ChannelHome.as_view(), name='homechannel'), #To Alen.. this is where you manage a channel
     url(r'^channels/create', ChannelCreate.as_view(), name='createchannel'),
     url(r'^channels/(?P<pk>\d+)/', ChannelHome.as_view(), name='viewchannel'),
-    #url(r'^channels/edit/(?P<pk>\d+)/', ChannelEdit.as_view(), name='editchannel'),
+    url(r'^channels/edit/(?P<pk>\d+)/', ChannelEdit.as_view(), name='editchannel'),
 
 )       
