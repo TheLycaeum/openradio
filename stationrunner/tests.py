@@ -324,3 +324,12 @@ class TestChannelEdit(TestCase):
         assert edited_c.c_name == "editedname"
         assert edited_c.c_frequency == "editedfrequency"
         assert c.id == edited_c.id
+
+class TestListChannels(TestCase):
+    def test_channel_page_exists(self):
+        """
+        Checks if a page exists at the desired URL for listing all the
+        channels
+        """
+        response = self.client.get(reverse("listchannels"))
+        assert response.status_code == 200
