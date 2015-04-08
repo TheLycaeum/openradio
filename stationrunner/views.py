@@ -75,7 +75,7 @@ class ChannelCreate(CreateView):
 
     def form_valid(self, form):
         # Check if the station object already exists
-        prev = Channel.objects.filter(name=form.instance.name)
+        prev = Channel.objects.filter(c_name=form.instance.c_name)
         if prev:
             return redirect("viewchannel", pk=prev[0].pk)
         return super(ChannelCreate, self).form_valid(form)
