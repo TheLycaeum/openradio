@@ -333,3 +333,11 @@ class TestListChannels(TestCase):
         """
         response = self.client.get(reverse("listchannels"))
         assert response.status_code == 200
+
+class TestLoginPage(TestCase):
+    def test_page_exists(self):
+        """
+        Tests if a page exist at the desired URL for login
+        """
+        response = self.client.get(reverse("userlogin"))
+        assert response.status_code == 200
