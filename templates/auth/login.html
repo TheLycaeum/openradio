@@ -1,0 +1,34 @@
+{% block head %}
+  <title>Open Radio | Login</title>
+{% endblock %}
+
+{% block body %}
+  <header>
+    <h1>Open Radio</h1>
+    <h2>Login Page</h2>
+  </header>
+
+  <section>
+    {% if form.errors %}
+      <p>Your username and password didn't match, please try again.</p>
+    {% endif %}
+
+    <form method="post" action=".">
+      {% csrf_token %}
+      <p>
+        <label for="id_username">Username:</label>
+        {{ form.username }}
+      </p>
+      <p>
+        <label for="id_password">Password:</label>
+        {{ form.password }}
+      </p>
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+      {% else %}
+        <input type="hidden" name="next" value="/portal/" />
+      {% endif %}
+      <input type="submit" value="login" />
+    </form>
+  </section>
+{% endblock %}

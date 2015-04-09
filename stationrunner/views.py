@@ -2,8 +2,10 @@ from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from django.views.generic import FormView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 from .models import Station, Channel
 from .forms import UserCreateForm
 
@@ -37,6 +39,10 @@ class UserRegistration(CreateView):
         self.auth_login(self.request, username, password)
 
         return response
+
+class UserLogin(FormView):
+    form_class = AuthenticationForm
+    template_name = "auth/login.html"
 
 class UserHome(DetailView):
     model = User
