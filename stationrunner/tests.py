@@ -341,3 +341,45 @@ class TestLoginPage(TestCase):
         """
         response = self.client.get(reverse("userlogin"))
         assert response.status_code == 200
+   
+    def test_page_logs_user_in(self):
+        """
+        Tests if the login page actually logs a user in
+        """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,
+                                        password=password
+                                    )
+        user.save()
+        response = self.client.post(reverse("userlogin"),
+                                    {"username":username,
+                                     "password":password
+                                 },
+                                    follow=True
+        )
+        assert user.is_authenticated() 
+
+    def test_page_redirects_to_user_home_on_login(self):
+        """
+        Test to assure that the login page redirects to the user's
+        home page
+        """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,
+                                        password=password)
+        user.save()
+        response = self.client.post(reverse("userlogin"),
+                                    {"username":username,
+                                     "password":password,
+                                     "next":reverse("userhome", 
+                                                    kwargs={"pk":user.id}
+                                                )
+                                 },
+                                    follow=True
+                                )
+        assert response.wsgi_request.path == reverse("userhome", 
+                                                     kwargs={"pk":user.id}
+        )
+        

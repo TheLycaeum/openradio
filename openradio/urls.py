@@ -1,8 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.views.generic.edit import CreateView
+from stationrunner import views
 from stationrunner.views import UserRegistration
-from stationrunner.views import UserLogin
 from stationrunner.views import UserHome
 from stationrunner.views import StationCreate
 from stationrunner.views import StationHome
@@ -19,7 +18,13 @@ urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
     #url(r'^', Home.as_view(), name='home'),
     url('^registration/', UserRegistration.as_view( ), name='userregistration'),
-    url(r'^login/', UserLogin.as_view(), name='userlogin'),
+    url(r'^login/', 
+        'django.contrib.auth.views.login', 
+        {'template_name':'auth/login.html'
+     }, 
+        name='userlogin'
+    ),
+    url(r'^logged_in_user/', views.user_redirect, name='userredirect'),
     url(r'^(?P<pk>\d+)/', UserHome.as_view(), name='userhome'),
     #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
     url(r'^stations/(?P<pk>\d+)/', StationHome.as_view(), name='viewstation'),

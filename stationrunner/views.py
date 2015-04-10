@@ -1,11 +1,14 @@
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.views.generic import FormView
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
 from .models import Station, Channel
 from .forms import UserCreateForm
 
@@ -37,17 +40,17 @@ class UserRegistration(CreateView):
 
         #authenticate and login
         self.auth_login(self.request, username, password)
-
         return response
 
-class UserLogin(FormView):
-    form_class = AuthenticationForm
-    template_name = "auth/login.html"
-
+@login_required
+def user_redirect(request):
+    url = reverse('userhome', kwargs={'pk': request.user.id})
+    return HttpResponseRedirect(url)
+    
 class UserHome(DetailView):
     model = User
     template_name_suffix = "_home"
-    
+
 class StationCreate(CreateView):
     model = Station
     fields = ["name","address"]
@@ -73,7 +76,6 @@ class StationEdit(UpdateView):
     
 class ListStations(ListView):
     model = Station
-
 
 class ChannelCreate(CreateView):
     model = Channel
