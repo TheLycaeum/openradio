@@ -373,13 +373,9 @@ class TestLoginPage(TestCase):
         response = self.client.post(reverse("userlogin"),
                                     {"username":username,
                                      "password":password,
-                                     "next":reverse("userhome", 
-                                                    kwargs={"pk":user.id}
-                                                )
+                                     "next":reverse("userhome")
                                  },
                                     follow=True
                                 )
-        assert response.wsgi_request.path == reverse("userhome", 
-                                                     kwargs={"pk":user.id}
-        )
+        assert response.wsgi_request.path == reverse("userhome")
         

@@ -42,14 +42,16 @@ class UserRegistration(CreateView):
         self.auth_login(self.request, username, password)
         return response
 
-@login_required
-def user_redirect(request):
-    url = reverse('userhome', kwargs={'pk': request.user.id})
-    return HttpResponseRedirect(url)
-    
 class UserHome(DetailView):
     model = User
     template_name_suffix = "_home"
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UserHome, self).dispatch(*args, **kwargs)
 
 class StationCreate(CreateView):
     model = Station
