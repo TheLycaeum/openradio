@@ -1,4 +1,2 @@
 *.pyc
 *~
-db.sqlite3
-stationrunner/migrations/*
