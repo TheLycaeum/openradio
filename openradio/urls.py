@@ -18,23 +18,22 @@ from stationrunner.views import ListChannels
 urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^home/', Home.as_view(), name='home'),
-    url(r'^registration/', UserRegistration.as_view( ), name='userregistration'),
-    url(r'^login/', 
+    url(r'^users/new', UserRegistration.as_view( ), name='userregistration'),
+    url(r'^users/login/', 
         'django.contrib.auth.views.login', 
         {'template_name':'auth/login.html'
      }, 
         name='userlogin'
     ),
-    url(r'^users/', UserHome.as_view(), name='userhome'),
+    url(r'^users/home', UserHome.as_view(), name='userhome'),
     #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
-    url(r'^stations/(?P<pk>\d+)/', StationHome.as_view(), name='viewstation'),
-    url(r'^stations/create', StationCreate.as_view(), name='createstation'),
+    url(r'^stations/new', StationCreate.as_view(), name='createstation'),
     url(r'^stations/edit/(?P<pk>\d+)/', StationEdit.as_view(), name='editstation'),
-    url(r'^stations/list/', ListStations.as_view(), name='liststations'),    
-    url(r'^channels/(?P<pk>\d+)/', ChannelHome.as_view(), name='homechannel'), #To Alen.. this is where you manage a channel
-    url(r'^channels/create', ChannelCreate.as_view(), name='createchannel'),
-    url(r'^channels/(?P<pk>\d+)/', ChannelHome.as_view(), name='viewchannel'),
+    url(r'^stations/(?P<pk>\d+)/', StationHome.as_view(), name='viewstation'),
+    url(r'^stations/', ListStations.as_view(), name='liststations'),    
+    url(r'^channels/new', ChannelCreate.as_view(), name='createchannel'),
     url(r'^channels/edit/(?P<pk>\d+)/', ChannelEdit.as_view(), name='editchannel'),
-    url(r'^channels/list/', ListChannels.as_view(), name = 'listchannels'),
+    url(r'^channels/(?P<pk>\d+)/', ChannelHome.as_view(), name='viewchannel'),
+    url(r'^channels/', ListChannels.as_view(), name = 'listchannels'),
 
 )       
