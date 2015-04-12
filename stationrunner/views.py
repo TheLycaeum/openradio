@@ -1,10 +1,10 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from django.views.generic import FormView
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -12,8 +12,10 @@ from django.contrib.auth import authenticate, login
 from .models import Station, Channel
 from .forms import UserCreateForm
 
+class Home(TemplateView):
+    template_name='home.html'
+
 class UserRegistration(CreateView):
-            
     template_name='auth/register.html'
     form_class=UserCreateForm
 

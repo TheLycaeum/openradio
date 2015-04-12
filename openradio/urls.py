@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from stationrunner import views
+from stationrunner.views import Home
 from stationrunner.views import UserRegistration
 from stationrunner.views import UserHome
 from stationrunner.views import StationCreate
@@ -16,8 +17,8 @@ from stationrunner.views import ListChannels
 
 urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
-    #url(r'^', Home.as_view(), name='home'),
-    url('^registration/', UserRegistration.as_view( ), name='userregistration'),
+    url(r'^home/', Home.as_view(), name='home'),
+    url(r'^registration/', UserRegistration.as_view( ), name='userregistration'),
     url(r'^login/', 
         'django.contrib.auth.views.login', 
         {'template_name':'auth/login.html'
