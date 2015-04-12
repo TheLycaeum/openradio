@@ -379,3 +379,10 @@ class TestLoginPage(TestCase):
                                 )
         assert response.wsgi_request.path == reverse("userhome")
         
+class TestHomePage(TestCase):
+    def test_page_exists(self):
+        """
+        Tests if a page exist at the desired URL for homepage
+        """
+        response = self.client.get(reverse("home"))
+        assert response.status_code == 200
