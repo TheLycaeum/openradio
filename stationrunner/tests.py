@@ -386,3 +386,12 @@ class TestHomePage(TestCase):
         """
         response = self.client.get(reverse("home"))
         assert response.status_code == 200
+    def test_contains_desired_links(self):
+        """
+        Tests if the homepage contains the desired links
+        under apt descriptions
+        """
+        response = self.client.get(reverse("home"))
+        assert '<a href="%s">Login</a>' % reverse("userlogin") in response.content
+        assert '<a href="%s">View all our stations</a>' % reverse("liststations") in response.content
+        assert '<a href="%s">SignUp!</a>' % reverse("userregistration") in response.content
