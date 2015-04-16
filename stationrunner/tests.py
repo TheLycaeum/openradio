@@ -9,23 +9,49 @@ class TestStationCreate(TestCase):
         """
         Tests if a page exists for creation of station
         """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
         response = self.client.get(reverse("createstation"))
         assert response.status_code == 200
+
+    def test_page_requires_login(self):
+        """
+        Tests if page for creation of station is available only on
+        login
+        """
+        response = self.client.get(reverse("createstation"))
+        assert response.status_code == 404
+ 
     def test_contains_required_fields(self):
         """
         Tests if the page for creation of a station contains a form and
         the required fields
         """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
         response = self.client.get(reverse("createstation"))
         assert "form" in response.context
         assert "name" in response.content
         assert "address" in response.content
+
     def test_submission_form_creates_station_object(self):
         """
         Tests if submission of the form on page for creation of a 
         station creates a station object and its attributes take the 
-        submitted values
+        expected values
         """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
+        response = self.client.get(reverse("createstation"))
         name = "anyname"
         address = "anyaddress"
         response = self.client.post(reverse("createstation"),
@@ -35,29 +61,55 @@ class TestStationCreate(TestCase):
         s = response.context["station"]
         assert s.name == name
         assert s.address == address
+        assert s.owner == user.id
+        
 
 class TestStationEdit(TestCase):
     def test_page_exists(self):
         """
         Tests if a page exists for editing a created station
         """
-        s = Station(name="anyname",address="anyddress")
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
+        s = Station(name="anyname",address="anyddress",owner=user.id)
         s.save()
         response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
         assert response_two.status_code == 200  
     
+    def test_page_requires_login(self):
+        """
+        Tests if page for editing an existing station is available only
+        on login
+        """
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        s = Station(name="anyname",address="anyddress",owner=user.id)
+        s.save()
+        response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
+        assert response.status_code == 404
+
     def test_contains_required_fields(self):
         """
         Tests if the page for editing a station contains a form and
         the required fields containing values from the station object to be 
         edited
         """
-        s = Station(name="anyname",address="anyddress")
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
+        s = Station(name="anyname",address="anyddress",owner=user.id)
         s.save()
-        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
-        assert "form" in response_two.context
-        assert s.name in response_two.content
-        assert s.address in response_two.content
+        response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
+        assert "form" in response.context
+        assert s.name in response.content
+        assert s.address in response.content
         
     def test_submission_form_edits_station_object(self):
         """
@@ -65,15 +117,21 @@ class TestStationEdit(TestCase):
         existing station object saves the object into db with the
         attributes overwritten with the new values.
         """
-        s = Station(name="anyname",address="anyddress")
+        username = "someusername"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,password=password)
+        user.save()
+        self.client.login(username=username,password=password)
+        s = Station(name="anyname",address="anyddress",owner=user.id)
         s.save()
-        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))                            
-        response_three = self.client.post(reverse("editstation", kwargs={'pk':s.pk}),
+        response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))                            
+        response_two = self.client.post(reverse("editstation", kwargs={'pk':s.pk}),
                                           {"name": "editedname", "address": "editedaddress"},
                                           follow=True)
-        edited_s = response_three.context["station"]
+        edited_s = response_two.context["station"]
         assert edited_s.name == "editedname"
         assert edited_s.address == "editedaddress"
+        assert edited_s.owner == user.id
         assert s.id == edited_s.id
 
 class TestListStations(TestCase):
