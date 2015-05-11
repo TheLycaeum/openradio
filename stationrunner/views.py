@@ -41,6 +41,11 @@ class UserRegistration(CreateView):
         self.auth_login(self.request, username, password)
         return response
 
+@login_required
+def users(request):
+    url = reverse('userhome', kwargs={'pk':request.user.id})
+    return HttpResponseRedirect(url)
+
 class UserHome(DetailView):
     model = User
     template_name_suffix = "_home"
