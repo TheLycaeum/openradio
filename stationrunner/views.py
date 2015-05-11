@@ -12,9 +12,6 @@ from django.contrib.auth import authenticate, login
 from .models import Station, Channel
 from .forms import UserCreateForm
 
-class Home(TemplateView):
-    template_name='home.html'
-
 class UserRegistration(CreateView):
     template_name='auth/register.html'
     form_class=UserCreateForm

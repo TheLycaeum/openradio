@@ -1,11 +1,11 @@
 {% block head %}
-  <title>Open Radio | Login</title>
+  <title>Open Radio</title>
 {% endblock %}
 
 {% block body %}
   <header>
     <h1>Open Radio</h1>
-    <h2>Login Page</h2>
+    <h2>We get you on air!</h2>
   </header>
 
   <section>
@@ -26,5 +26,7 @@
       <input type="submit" value="login" />
       <input type="hidden" name="next" value="{% url 'userhome' %}" />
     </form>
+    <p><a href="{% url 'userregistration' %}">SignUp!</a></p>      
+    <p><a href="{% url 'liststations' %}">View all our stations</a></p>
   </section>
 {% endblock %}
