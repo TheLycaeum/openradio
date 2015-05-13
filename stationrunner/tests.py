@@ -431,25 +431,11 @@ class TestLoginPage(TestCase):
         response = self.client.post(reverse("userlogin"),
                                     {"username":username,
                                      "password":password,
-                                     "next":reverse("userhome")
+                                     "next":reverse("userredirect")
                                  },
                                     follow=True
                                 )
-        assert response.wsgi_request.path == reverse("userhome")
+        assert response.wsgi_request.path == reverse("userhome",
+                                                     kwargs={'pk':user.pk}
+        )
         
-class TestHomePage(TestCase):
-    def test_page_exists(self):
-        """
-        Tests if a page exist at the desired URL for homepage
-        """
-        response = self.client.get(reverse("home"))
-        assert response.status_code == 200
-    def test_contains_desired_links(self):
-        """
-        Tests if the homepage contains the desired links
-        under apt descriptions
-        """
-        response = self.client.get(reverse("home"))
-        assert '<a href="%s">Login</a>' % reverse("userlogin") in response.content
-        assert '<a href="%s">View all our stations</a>' % reverse("liststations") in response.content
-        assert '<a href="%s">SignUp!</a>' % reverse("userregistration") in response.content
