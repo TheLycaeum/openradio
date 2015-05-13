@@ -23,7 +23,7 @@ urlpatterns = patterns('',
         name='userlogin'
     ),
     url(r'^users$', UserRegistration.as_view( ), name='userregistration'),
-    url(r'^user_redirect/', views.users, name='userredirect'),
+    url(r'^user_redirect/', views.user_redirect, name='userredirect'),
     url(r'^users/(?P<pk>\d+)$', UserHome.as_view(), name='userhome'),
     #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
     url(r'^stations/new$', StationCreate.as_view(), name='createstation'),

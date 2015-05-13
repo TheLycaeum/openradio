@@ -42,7 +42,7 @@ class UserRegistration(CreateView):
         return response
 
 @login_required
-def users(request):
+def user_redirect(request):
     url = reverse('userhome', kwargs={'pk':request.user.id})
     return HttpResponseRedirect(url)
 
