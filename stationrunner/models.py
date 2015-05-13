@@ -18,15 +18,18 @@ class Station(models.Model):
     def get_absolute_url(self):
         return reverse("viewstation", kwargs={"pk": self.pk})
 
+class Playlist(models.Model):
+    pass
+
 class Channel(models.Model):
     c_name = models.CharField(max_length=50)
     c_frequency = models.CharField(max_length=50)
     c_owner = models.ForeignKey(User,default='')
     c_station = models.ForeignKey(Station,default='')
-
-    # @TODO: add the following attribute:
-    #    - playlists -> list of Playlists
+    playlists = models.ManyToManyField(Playlist)
 
     def get_absolute_url(self):
         return reverse("viewchannel", kwargs={"pk": self.pk})
+
+
 
