@@ -93,7 +93,7 @@ TEMPLATE_DIRS = (
 )
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda u: u'/{0}/'.format(u.pk)
+    'auth.user': lambda u: u'users/{0}'.format(u.pk)
 }
 
 LOGIN_URL = '/'
