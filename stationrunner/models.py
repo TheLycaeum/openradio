@@ -22,10 +22,10 @@ class Playlist(models.Model):
     pass
 
 class Channel(models.Model):
-    c_name = models.CharField(max_length=50)
-    c_frequency = models.CharField(max_length=50)
-    c_owner = models.ForeignKey(User,default='')
-    c_station = models.ForeignKey(Station,default='')
+    name = models.CharField(max_length=50)
+    frequency = models.CharField(max_length=50)
+    owner = models.ForeignKey(User,default='')
+    station = models.ForeignKey(Station,default='')
     playlists = models.ManyToManyField(Playlist)
 
     def get_absolute_url(self):
