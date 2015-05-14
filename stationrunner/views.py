@@ -62,7 +62,7 @@ class UserHome(DetailView):
 
 class StationListCreate(View):
     def get(self, request):
-        return render('get')
+        return HttpResponse('get')
 
     def post(self, request):
         return HttpResponse('post')
