@@ -3,10 +3,9 @@ from django.contrib import admin
 from stationrunner import views
 from stationrunner.views import UserRegistration
 from stationrunner.views import UserHome
-from stationrunner.views import StationCreate
+from stationrunner.views import StationListCreate
 from stationrunner.views import StationHome
 from stationrunner.views import StationEdit
-from stationrunner.views import ListStations
 from stationrunner.views import ChannelCreate
 from stationrunner.views import ChannelHome
 from stationrunner.views import ChannelEdit
@@ -26,10 +25,9 @@ urlpatterns = patterns('',
     url(r'^user_redirect/', views.user_redirect, name='userredirect'),
     url(r'^users/(?P<pk>\d+)$', UserHome.as_view(), name='userhome'),
     #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
-    url(r'^stations/new$', StationCreate.as_view(), name='createstation'),
+    url(r'^stations$', StationListCreate.as_view(), name='list_create_station'),
     url(r'^stations/edit/(?P<pk>\d+)$', StationEdit.as_view(), name='editstation'),
     url(r'^stations/(?P<pk>\d+)$', StationHome.as_view(), name='viewstation'),
-    url(r'^stations$', ListStations.as_view(), name='liststations'),    
     url(r'^channels/new$', ChannelCreate.as_view(), name='createchannel'),
     url(r'^channels/edit/(?P<pk>\d+)$', ChannelEdit.as_view(), name='editchannel'),
     url(r'^channels/(?P<pk>\d+)$', ChannelHome.as_view(), name='viewchannel'),

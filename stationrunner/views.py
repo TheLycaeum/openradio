@@ -1,5 +1,8 @@
+from django.shortcuts import render
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views.generic import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
@@ -57,16 +60,12 @@ class UserHome(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(UserHome, self).dispatch(*args, **kwargs)
 
-class StationCreate(CreateView):
-    model = Station
-    fields = ["name","address"]
+class StationListCreate(View):
+    def get(self, request):
+        return render('get')
 
-    def form_valid(self, form):
-        # Check if the station object already exists
-        prev = Station.objects.filter(name=form.instance.name)
-        if prev:
-            return redirect("viewstation", pk=prev[0].pk)
-        return super(StationCreate, self).form_valid(form)
+    def post(self, request):
+        return HttpResponse('post')
 
 class StationHome(DetailView):
     model = Station
@@ -79,9 +78,6 @@ class StationEdit(UpdateView):
     def get_object(self, queryset=None):
         obj = Station.objects.get(pk=self.kwargs['pk'])
         return obj
-    
-class ListStations(ListView):
-    model = Station
 
 class ChannelCreate(CreateView):
     model = Channel
