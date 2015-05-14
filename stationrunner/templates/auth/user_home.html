@@ -1,1 +1,14 @@
-<h1> {{ object.username }}, Welcome to your page <h1/>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+  <h1> Hey {{ object.username }}! </h1>
+  <p><a href="{% url 'list_create_station' %}">View your stations</a></p>
+  <form name="create_station" id="create_station" method="post" action="{% url 'list_create_station' %}">
+    {% csrf_token %}
+    <input type="submit" value="Create a new Station" />
+  </form>
+</body>
+</html>
