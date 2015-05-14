@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from stationrunner.models import Station
 
 class UserCreateForm(UserCreationForm):
     """
@@ -35,3 +37,7 @@ class UserCreateForm(UserCreationForm):
             user.save()
         return user
         
+class StationForm(ModelForm):
+    class Meta:
+        model = Station
+        fields = ['name', 'address']

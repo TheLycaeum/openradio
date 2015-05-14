@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .models import Station, Channel
-from .forms import UserCreateForm
+from .forms import UserCreateForm, StationForm
 
 class UserRegistration(CreateView):
     template_name='auth/register.html'
@@ -62,22 +62,35 @@ class UserHome(DetailView):
 
 class StationListCreate(View):
     def get(self, request):
-        return HttpResponse('get')
+        return render(request, 'list_stations.html')
 
     def post(self, request):
-        return HttpResponse('post')
+        form = StationForm()
+        return render(request, 'create_station.html', {'form': form})
 
-class StationHome(DetailView):
-    model = Station
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StationListCreate, self).dispatch(*args, **kwargs)
 
-class StationEdit(UpdateView):
-    model = Station
-    fields = ["name","address"]
-    template_name_suffix = '_edit_form'
-
-    def get_object(self, queryset=None):
-        obj = Station.objects.get(pk=self.kwargs['pk'])
-        return obj
+class StationActualCreate(View):
+    def post(self, request):
+        form = StationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+            owner = request.user
+            new_station_object = Station(name=name,
+                                         address=address,
+                                         owner=owner
+            )
+            new_station_object.save()
+            return HttpResponseRedirect(reverse("home_station", 
+                                                kwargs={'pk': new_station_object.id}
+            ))
+            
+class StationHome(View):
+    def get(self, request, pk):
+        return HttpResponse("Created :)")
 
 class ChannelCreate(CreateView):
     model = Channel
