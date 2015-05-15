@@ -1,0 +1,27 @@
+<!DOCTYPE html/>
+<html>
+
+<head>
+</head>
+
+<body>
+  <h1>{{ station.name }}</h1>
+  <p>Address: {{ station.address }}</p>
+  <p>Owner: {{ station.owner }}</p>
+  <h2>Channels under the station</h2>
+  <ul>
+    
+    {% for channel in channels %}
+    <li>{{ channel }}</li>
+    {% empty %}
+    <li>You haven't created any channel yet</li>
+    {% endfor %}
+  </ul>
+
+  <form name="create_channel" id="create_channel" method="post" action="{% url 'list_create_channel' %}">
+    {% csrf_token %}
+    <input type="submit" value="Create a new channel" />
+  </form>
+</body>
+
+</html>

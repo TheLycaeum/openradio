@@ -4,11 +4,10 @@ from django.http import HttpResponseRedirect
 from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.views.generic import View
-from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
-from django.views.generic.edit import UpdateView
-from django.views.generic.list import ListView
+#from django.views.generic.edit import UpdateView
+#from django.views.generic.list import ListView
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -98,30 +97,40 @@ class StationActualCreate(View):
             
 class StationHome(View):
     def get(self, request, pk):
-        return HttpResponse("Created :)")
+        station = Station.objects.get(pk=pk)
+        channels = Channel.objects.filter(station=station)
+        return render(request, 
+                      "home_station.html",
+                      {"station":station,
+                       "channels":channels
+                   },
+                  )
 
-class ChannelCreate(CreateView):
-    model = Channel
-    fields = ["c_name","c_frequency"]
+class ChannelListCreate(View):
+    pass
 
-    def form_valid(self, form):
-        # Check if the station object already exists
-        prev = Channel.objects.filter(c_name=form.instance.c_name)
-        if prev:
-            return redirect("viewchannel", pk=prev[0].pk)
-        return super(ChannelCreate, self).form_valid(form)
+#class ChannelCreate(CreateView):
+#    model = Channel
+#    fields = ["c_name","c_frequency"]
+#
+#    def form_valid(self, form):
+#        # Check if the station object already exists
+#        prev = Channel.objects.filter(c_name=form.instance.c_name)
+#        if prev:
+#            return redirect("viewchannel", pk=prev[0].pk)
+#        return super(ChannelCreate, self).form_valid(form)
 
-class ChannelHome(DetailView):
-    model = Channel
+#class ChannelHome(DetailView):
+#   model = Channel
 
-class ChannelEdit(UpdateView):
-    model = Channel
-    fields = ["c_name","c_frequency"]
-    template_name_suffix = '_edit_form'
+#class ChannelEdit(UpdateView):
+#    model = Channel
+#    fields = ["c_name","c_frequency"]
+#    template_name_suffix = '_edit_form'
+#
+#    def get_object(self, queryset=None):
+#        obj = Channel.objects.get(pk=self.kwargs['pk'])
+#        return obj
 
-    def get_object(self, queryset=None):
-        obj = Channel.objects.get(pk=self.kwargs['pk'])
-        return obj
-
-class ListChannels(ListView):
-    model = Channel
+#class ListChannels(ListView):
+#    model = Channel
