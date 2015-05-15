@@ -6,7 +6,15 @@ class Station(models.Model):
     name = models.CharField(max_length=50)
     address = models.TextField(default='')
     owner = models.ForeignKey(User,default='')
-    members = models.ManyToManyField(User, related_name='members')        
+    members = models.ManyToManyField(User,related_name='members')
+
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("viewstation", kwargs={"pk": self.pk})
+
+        
 #   To team members, methods add_member, remove_member and 
 #   check_membership are not required as adding to a Django 
 #   ManyToMany field is as simple as 
@@ -14,9 +22,6 @@ class Station(models.Model):
 #   "<object_name>.members.remove(<object_name>)".
 #   Finally, to check membership of a user we can simply do
 #   "assert <object_name> in <object_name>.members.all()"
-        
-    def get_absolute_url(self):
-        return reverse("viewstation", kwargs={"pk": self.pk})
 
 class Playlist(models.Model):
     pass
@@ -27,6 +32,9 @@ class Channel(models.Model):
     owner = models.ForeignKey(User,default='')
     station = models.ForeignKey(Station,default='')
     playlists = models.ManyToManyField(Playlist)
+
+    def __unicode__(self):
+        return self.name
 
     def get_absolute_url(self):
         return reverse("viewchannel", kwargs={"pk": self.pk})

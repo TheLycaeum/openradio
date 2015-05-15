@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.views.generic import View
 from django.views.generic import TemplateView
@@ -62,7 +63,11 @@ class UserHome(DetailView):
 
 class StationListCreate(View):
     def get(self, request):
-        return render(request, 'list_stations.html')
+        stations = Station.objects.filter(owner=request.user)
+        return render(request,
+                      'list_stations.html',
+                      {'stations':stations},
+        )
 
     def post(self, request):
         form = StationForm()
@@ -73,6 +78,9 @@ class StationListCreate(View):
         return super(StationListCreate, self).dispatch(*args, **kwargs)
 
 class StationActualCreate(View):
+    def get(self, request):
+        raise Http404
+
     def post(self, request):
         form = StationForm(request.POST)
         if form.is_valid():
