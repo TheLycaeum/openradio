@@ -4,7 +4,7 @@
 </head>
 
 <body>
-  <h1> Hey {{ object.username }}! </h1>
+  <h1> Hey {{ user }}! </h1>
   <p><a href="{% url 'list_create_station' %}">View your stations</a></p>
   <form name="create_station" id="create_station" method="post" action="{% url 'list_create_station' %}">
     {% csrf_token %}

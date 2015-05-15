@@ -51,12 +51,17 @@ def user_redirect(request):
     url = reverse('userhome', kwargs={'pk':request.user.id})
     return HttpResponseRedirect(url)
 
-class UserHome(DetailView):
-    model = User
-    template_name_suffix = "_home"
-
-    def get_object(self, queryset=None):
-        return self.request.user
+class UserHome(View):
+    def get(self, request, pk):
+        rightful_user = User.objects.get(pk=pk)
+        if request.user == rightful_user:
+            return render(request, 
+                          'home_user.html',
+                          {'user':request.user,
+                       }
+            )
+        else:
+            return HttpResponse("Not your page!")
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
