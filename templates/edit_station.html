@@ -1,0 +1,5 @@
+<form action="{% url 'edit_station' station.id %}" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Edit and Save"/>
+</form>

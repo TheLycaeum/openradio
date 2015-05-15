@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import Http404
 from django.core.urlresolvers import reverse
+from django.forms import Form
 from django.views.generic import View
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
@@ -14,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .models import Station, Channel
 from .forms import UserCreateForm, StationForm
+from .forms import AddMemberForm, RemoveMemberForm
 
 class UserRegistration(CreateView):
     template_name='auth/register.html'
@@ -98,14 +100,85 @@ class StationActualCreate(View):
 class StationHome(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
-        channels = Channel.objects.filter(station=station)
-        return render(request, 
-                      "home_station.html",
-                      {"station":station,
-                       "channels":channels
-                   },
-                  )
+        if station.owner == request.user:
+            channels = Channel.objects.filter(station=station)
+            members = station.members.all()
+            form1 = AddMemberForm()
+            form2 = RemoveMemberForm()
+            form2.fields['member'].queryset = station.members.all()
+            return render(request, 
+                          "home_station.html",
+                          {"station":station,
+                           "form1":form1,
+                           "form2":form2,
+                           "channels":channels,
+                           "members":members,
+                       },
+                      )
+        else:
+            return HttpResponse("This Station doesn't belong to you!")
 
+    def post(self,request, pk):
+        station = Station.objects.get(pk=pk)
+        form = StationForm({'name': station.name,
+                            'address': station.address,
+                        }
+                       )
+        return render(request, 'edit_station.html', {'form':form,
+                                                     'station':station
+                                                 }
+        )
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StationHome, self).dispatch(*args, **kwargs)
+
+class MemberAdd(View): 
+    def get(self, request):
+        raise Http404
+
+    def post(self, request, pk):
+        form = AddMemberForm(request.POST)
+        if form.is_valid():
+            Station.objects.get(pk=pk).members.add(
+                form.cleaned_data['member']
+            )
+        return HttpResponseRedirect(reverse("home_station",
+                                            kwargs={'pk':pk},
+                                        )
+                                )
+
+class MemberRemove(View):
+    def get(self, request):
+        raise Http404
+
+    def post(self, request, pk):
+        form = RemoveMemberForm(request.POST)
+        if form.is_valid():
+            Station.objects.get(pk=pk).members.remove(
+                form.cleaned_data['member']
+            )
+            return HttpResponseRedirect(reverse("home_station",
+                                                kwargs={'pk':pk},
+                                            )
+                                    )
+
+class StationEdit(View):
+    def get(self, request):
+        raise Http404
+
+    def post(self, request, pk):
+        form = StationForm(request.POST)
+        if form.is_valid():
+            station = Station.objects.get(pk=pk)
+            station.name = form.cleaned_data['name']
+            station.address = form.cleaned_data['address']
+            station.save()
+            return HttpResponseRedirect(reverse("home_station",
+                                                kwargs={'pk':pk},
+                                            )
+                                    )
+                                                
 class ChannelListCreate(View):
     pass
 

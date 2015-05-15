@@ -8,9 +8,9 @@
   <h1>{{ station.name }}</h1>
   <p>Address: {{ station.address }}</p>
   <p>Owner: {{ station.owner }}</p>
+
   <h2>Channels under the station</h2>
-  <ul>
-    
+  <ul>    
     {% for channel in channels %}
     <li>{{ channel }}</li>
     {% empty %}
@@ -18,9 +18,38 @@
     {% endfor %}
   </ul>
 
-  <form name="create_channel" id="create_channel" method="post" action="{% url 'list_create_channel' %}">
+  <form name="create_channel" method="post" action="{% url 'list_create_channel' %}">
     {% csrf_token %}
     <input type="submit" value="Create a new channel" />
+  </form>
+
+  <h2>Station Members</h2>
+  <ul>    
+    {% for member in members %}
+    <li>{{ member }}</li>
+    {% empty %}
+    <li>You haven't added any member yet</li>
+    {% endfor %}
+  </ul>
+  
+  <h3>Add a new member</h3>
+  <form method="post" action="{% url 'add_member' station.pk %}">
+    {% csrf_token %}
+    {{ form1 }}
+    <input type="submit" value="Add" />
+  </form>
+
+  <h3>Remove a member</h3>
+  <form method="post" action="{% url 'remove_member' station.pk %}">
+    {% csrf_token %}
+    {{ form2 }}
+    <input type="submit" value="Remove" />
+  </form>
+
+  <h3>Edit Station Details??</h3>
+  <form method="post" action="{% url 'home_station' station.pk %}">
+    {% csrf_token %}    
+    <input type="submit" value="Edit" />
   </form>
 </body>
 

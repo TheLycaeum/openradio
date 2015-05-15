@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import Form
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -41,3 +42,13 @@ class StationForm(ModelForm):
     class Meta:
         model = Station
         fields = ['name', 'address']
+
+class AddMemberForm(Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all(),
+                                  empty_label='Choose a User',
+    )
+
+class RemoveMemberForm(Form):
+    member = forms.ModelChoiceField(queryset=User.objects.all(),
+                                  empty_label='Choose a Member',
+    )
