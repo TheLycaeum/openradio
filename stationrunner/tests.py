@@ -1,166 +1,12 @@
 from django.test import TestCase
+from django.http import HttpRequest
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .models import Station
 from .models import Channel
 
-#class TestStationCreate(TestCase):
-#    def test_page_exists(self):
-#       """
-#        Tests if a page exists for creation of station
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        response = self.client.get(reverse("createstation"))
-#        assert response.status_code == 200
-#
-#    def test_page_requires_login(self):
-#        """
-#        Tests if page for creation of station is available only on
-#        login
-#        """
-#        response = self.client.get(reverse("createstation"))
-#       assert response.status_code == 404
-# 
-#    def test_contains_required_fields(self):
-#        """
-#        Tests if the page for creation of a station contains a form and
-#        the required fields
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        response = self.client.get(reverse("createstation"))
-#        assert "form" in response.context
-#        assert "name" in response.content
-#        assert "address" in response.content
-#
-#    def test_submission_form_creates_station_object(self):
-#        """
-#        Tests if submission of the form on page for creation of a 
-#        station creates a station object and its attributes take the 
-#        expected values
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        response = self.client.get(reverse("createstation"))
-#        name = "anyname"
-#        address = "anyaddress"
-#        response = self.client.post(reverse("createstation"),
-#                                    {"name": name, "address": address},
-#                                    follow=True)
-#        assert "station" in response.context
-#        s = response.context["station"]
-#        assert s.name == name
-#        assert s.address == address
-#        assert s.owner == user.id
-        
-
-#class TestStationEdit(TestCase):
-#    def test_page_exists(self):
-#        """
-#        Tests if a page exists for editing a created station
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        s = Station(name="anyname",address="anyddress",owner=user.id)
-#        s.save()
-#        response_two = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
-#        assert response_two.status_code == 200  
-    
-#    def test_page_requires_login(self):
-#        """
-#        Tests if page for editing an existing station is available only
-#        on login
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        s = Station(name="anyname",address="anyddress",owner=user.id)
-#        s.save()
-#       response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
-#        assert response.status_code == 404
-
-#    def test_contains_required_fields(self):
-#        """
-#        Tests if the page for editing a station contains a form and
-#        the required fields containing values from the station object to be 
-#        edited
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        s = Station(name="anyname",address="anyddress",owner=user.id)
-#        s.save()
-#        response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))
-#       assert "form" in response.context
-#        assert s.name in response.content
-#        assert s.address in response.content
-#        
-#    def test_submission_form_edits_station_object(self):
-#        """
-#        Tests if submission of the form on page for editing an
-#        existing station object saves the object into db with the
-#        attributes overwritten with the new values.
-#        """
-#        username = "someusername"
-#        password = "somepassword"
-#        user = User.objects.create_user(username=username,password=password)
-#        user.save()
-#        self.client.login(username=username,password=password)
-#        s = Station(name="anyname",address="anyddress",owner=user.id)
-#        s.save()
-#        response = self.client.get(reverse("editstation", kwargs={'pk':s.pk}))                            
-#        response_two = self.client.post(reverse("editstation", kwargs={'pk':s.pk}),
-#                                          {"name": "editedname", "address": "editedaddress"},
-#                                          follow=True)
-#        edited_s = response_two.context["station"]
-#        assert edited_s.name == "editedname"
-#        assert edited_s.address == "editedaddress"
-#        assert edited_s.owner == user.id
-#        assert s.id == edited_s.id
-
-#class TestListStations(TestCase):
-#    def test_page_exists(self):
-#        """
-#        Checks if a page exists at the desired URL for listing all the
-#        stations.
-#        """
-#        response = self.client.get(reverse("liststations"))
-#        assert response.status_code == 200
-        
-#    def test_page_lists_stations(self):
-#        """
-#        Checks if page for listing all the stations actually lists them
-#        """
-#        s1 = Station(name="name1",address="address1")
-#        s1.save()
-#        s2 = Station(name="name2",address="address2")
-#        s2.save()
-#        s3 = Station(name="name3",address="address3")
-#        s3.save()
-#        response = self.client.get(reverse("liststations"),
-#                                   follow=True)
-#        assert s1.name in response.content
-#        assert s1.address in response.content
-#        assert s2.name in response.content
-#        assert s2.address in response.content
-#        assert s3.name in response.content
-#        assert s3.address in response.content
 
 class TestUserSignUp(TestCase):
     def test_page_exists(self):
@@ -177,7 +23,7 @@ class TestUserSignUp(TestCase):
         """
         response = self.client.get(reverse("userregistration"))
         assert response.context["user"]
-
+        
     def test_contains_required_fields(self):
         """
         Tests if the page for user registration contains a form with
@@ -191,7 +37,7 @@ class TestUserSignUp(TestCase):
         assert "username" in response.content
         assert "password1" in response.content #password
         assert "password2" in response.content #password confirmation
-    
+
     def test_submission_form_creates_user_object(self):
         """
         Tests if submission of the form on page for creation of a 
@@ -213,7 +59,7 @@ class TestUserSignUp(TestCase):
                                     follow=True)
         assert User.objects.get(username=username)
         user = User.objects.get(username=username)
-        
+
     def test_no_two_users_can_have_same_username(self):
         """
         Tests if duplicate username will be rejected by the page
@@ -224,25 +70,25 @@ class TestUserSignUp(TestCase):
         username1 = "someusername"
         password1 = "somepassword"
         response1 = self.client.post(reverse("userregistration"),
-                                    {"first_name": first_name1,
-                                     "last_name": last_name1,
-                                     "email": email1,
-                                     "username": username1,
-                                     "password1": password1,
-                                     "password2": password1},
-                                    follow=True)
+                                     {"first_name": first_name1,
+                                      "last_name": last_name1,
+                                      "email": email1,
+                                      "username": username1,
+                                      "password1": password1,
+                                      "password2": password1},
+                                     follow=True)
         first_name2 = "someothername"
         last_name2 = "someothername"
         email2 = "someotheremail@someservice.com"
         password2 = "someotherpasswordd"
         response2 = self.client.post(reverse("userregistration"),
-                                    {"first_name": first_name2,
-                                     "last_name": last_name2,
-                                     "email": email2,
-                                     "username": username1,  # same username
-                                     "password1": password2,
-                                     "password2": password2},
-                                    follow=True)
+                                     {"first_name": first_name2,
+                                      "last_name": last_name2,
+                                      "email": email2,
+                                      "username": username1,  # same username
+                                      "password1": password2,
+                                      "password2": password2},
+                                     follow=True)
         users_with_username1 = 0
         for user in User.objects.all():
             if user.username == username1:
@@ -259,36 +105,31 @@ class TestUserSignUp(TestCase):
         username1 = "someusername"
         password1 = "somepassword"
         response1 = self.client.post(reverse("userregistration"),
-                                    {"first_name": first_name1,
-                                     "last_name": last_name1,
-                                     "email": email1,
-                                     "username": username1,
-                                     "password1": password1,
-                                     "password2": password1},
-                                    follow=True)
+                                     {"first_name": first_name1,
+                                      "last_name": last_name1,
+                                      "email": email1,
+                                      "username": username1,
+                                      "password1": password1,
+                                      "password2": password1},
+                                     follow=True)
         first_name2 = "someothername"
         last_name2 = "someothername"
         username2 = "someotherusername"
         password2 = "someotherpasswordd"
         response2 = self.client.post(reverse("userregistration"),
-                                    {"first_name": first_name2,
-                                     "last_name": last_name2,
-                                     "email": email1,       # same email
-                                     "username": username2, 
-                                     "password1": password2,
-                                     "password2": password2},
-                                    follow=True)
+                                     {"first_name": first_name2,
+                                      "last_name": last_name2,
+                                      "email": email1,       # same email
+                                      "username": username2, 
+                                      "password1": password2,
+                                      "password2": password2},
+                                     follow=True)
         users_with_email1 = 0
         for user in User.objects.all():
             if user.email == email1:
                 users_with_email1 += 1
         assert users_with_email1 == 1
-        users_with_email1 = 0
-        for user in User.objects.all():
-            if user.email == email1:
-                users_with_email1 += 1
-        assert users_with_email1 == 1
-    
+       
     def test_registration_also_signs_user_in(self):
         """
         Assures that registration signs in the user too
@@ -308,89 +149,89 @@ class TestUserSignUp(TestCase):
                                     follow=True)
         user = response.context["user"]
         assert user.is_authenticated()
-                
-#class TestChannelCreate(TestCase):
-#    def test_channel_page_exists(self):
-#        """
-#        Tests if channel creation page exists
-#        """
-#        response = self.client.get(reverse("createchannel"))
-#       assert response.status_code == 200
-#
-#    def test_channel_contains_required_fields(self):
-#        """
-#        Tests if the channel page of a channel contains a form and
-#        the required fields
-#        """
-#        response = self.client.get(reverse("createchannel"))
-#        assert "form" in response.context
-#        assert "c_name" in response.content
-#        assert "c_frequency" in response.content
 
-#    def test_submission_form_creates_channel_object(self):
-#        """
-#        Tests if submission of page form creates a channel object and
-#        its attributes take the submitted values
-#        """
-#       c_name = "anyname"
-#        c_frequency = "anyaddress"
-#        response = self.client.post(reverse("createchannel"),
-#                                    {"c_name": c_name, "c_frequency": c_frequency},
-#                                    follow=True)
-#        assert "channel" in response.context
-#        c = response.context["channel"]
-#        assert c.c_name == c_name
-#        assert c.c_frequency == c_frequency
+ #class TestChannelCreate(TestCase):
+ #    def test_channel_page_exists(self):
+ #        """
+ #        Tests if channel creation page exists
+ #        """
+ #        response = self.client.get(reverse("createchannel"))
+ #       assert response.status_code == 200
+ #
+ #    def test_channel_contains_required_fields(self):
+ #        """
+ #        Tests if the channel page of a channel contains a form and
+ #        the required fields
+ #        """
+ #        response = self.client.get(reverse("createchannel"))
+ #        assert "form" in response.context
+ #        assert "c_name" in response.content
+ #        assert "c_frequency" in response.content
+
+ #    def test_submission_form_creates_channel_object(self):
+ #        """
+ #        Tests if submission of page form creates a channel object and
+ #        its attributes take the submitted values
+ #        """
+ #       c_name = "anyname"
+ #        c_frequency = "anyaddress"
+ #        response = self.client.post(reverse("createchannel"),
+ #                                    {"c_name": c_name, "c_frequency": c_frequency},
+ #                                    follow=True)
+ #        assert "channel" in response.context
+ #        c = response.context["channel"]
+ #        assert c.c_name == c_name
+ #        assert c.c_frequency == c_frequency
 
 
-#class TestChannelEdit(TestCase):
-#    def test_channe_page_exists(self):
-#        """
-#        Tests if a channel page exists for editing a created channel
-#        """
-#        c = Channel(c_name="anyname",c_frequency="anyfrequency")
-#        c.save()
-#        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
-#        assert response_two.status_code == 200
+ #class TestChannelEdit(TestCase):
+ #    def test_channe_page_exists(self):
+ #        """
+ #        Tests if a channel page exists for editing a created channel
+ #        """
+ #        c = Channel(c_name="anyname",c_frequency="anyfrequency")
+ #        c.save()
+ #        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
+ #        assert response_two.status_code == 200
 
-#    def test_channel_contains_required_fields(self):
-#        """
-#        Tests if the page for editing a channel contains a form and
-#        the required fields containing values from the channel object to be 
-#        edited
-#        """
-#        c = Channel(c_name="anyname",c_frequency="anyfrequency")
-#        c.save()
-#        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
-#        assert "form" in response_two.context
-#        assert c.c_name in response_two.content
-#        assert c.c_frequency in response_two.content
+ #    def test_channel_contains_required_fields(self):
+ #        """
+ #        Tests if the page for editing a channel contains a form and
+ #        the required fields containing values from the channel object to be 
+ #        edited
+ #        """
+ #        c = Channel(c_name="anyname",c_frequency="anyfrequency")
+ #        c.save()
+ #        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))
+ #        assert "form" in response_two.context
+ #        assert c.c_name in response_two.content
+ #        assert c.c_frequency in response_two.content
 
-#    def test_channel_submission_form_edits_channel_object(self):
-#        """
-#        Tests if channel form submission of page for editing an
-#        existing channel object saves the object in db with
-#        attributes overwritten.
-#        """
-#       c = Channel(c_name="anyname",c_frequency="anyfrequency")
-#        c.save()
-#        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))                            
-#        response_three = self.client.post(reverse("editchannel", kwargs={'pk':c.pk}),
-#                                         {"c_name": "editedname", "c_frequency": "editedfrequency"},
-#                                          follow=True)
-#        edited_c = response_three.context["channel"]
-#        assert edited_c.c_name == "editedname"
-#        assert edited_c.c_frequency == "editedfrequency"
-#        assert c.id == edited_c.id
+ #    def test_channel_submission_form_edits_channel_object(self):
+ #        """
+ #        Tests if channel form submission of page for editing an
+ #        existing channel object saves the object in db with
+ #        attributes overwritten.
+ #        """
+ #       c = Channel(c_name="anyname",c_frequency="anyfrequency")
+ #        c.save()
+ #        response_two = self.client.get(reverse("editchannel", kwargs={'pk':c.pk}))                            
+ #        response_three = self.client.post(reverse("editchannel", kwargs={'pk':c.pk}),
+ #                                         {"c_name": "editedname", "c_frequency": "editedfrequency"},
+ #                                          follow=True)
+ #        edited_c = response_three.context["channel"]
+ #        assert edited_c.c_name == "editedname"
+ #        assert edited_c.c_frequency == "editedfrequency"
+ #        assert c.id == edited_c.id
 
-#class TestListChannels(TestCase):
-#    def test_channel_page_exists(self):
-#        """
-#        Checks if a page exists at the desired URL for listing all the
-#        channels
-#        """
-#        response = self.client.get(reverse("listchannels"))
-#        assert response.status_code == 200
+ #class TestListChannels(TestCase):
+ #    def test_channel_page_exists(self):
+ #        """
+ #        Checks if a page exists at the desired URL for listing all the
+ #        channels
+ #        """
+ #        response = self.client.get(reverse("listchannels"))
+ #        assert response.status_code == 200
 
 class TestLoginPage(TestCase):
     def test_page_exists(self):
@@ -399,7 +240,7 @@ class TestLoginPage(TestCase):
         """
         response = self.client.get(reverse("userlogin"))
         assert response.status_code == 200
-   
+        
     def test_page_logs_user_in(self):
         """
         Tests if the login page actually logs a user in
@@ -415,9 +256,9 @@ class TestLoginPage(TestCase):
                                      "password":password
                                  },
                                     follow=True
-        )
+                                )
         assert user.is_authenticated() 
-
+        
     def test_page_redirects_to_user_home_on_login(self):
         """
         Test to assure that the login page redirects to the user's
@@ -437,5 +278,77 @@ class TestLoginPage(TestCase):
                                 )
         assert response.wsgi_request.path == reverse("userhome",
                                                      kwargs={'pk':user.pk}
+                                                 )
+        
+
+class TestUserHomePage(TestCase):
+    def test_uanimous_access_denied(self):
+        """
+        Assures unanimous user cannot access user home page
+        """
+        username1="somename"
+        password1="somepassword"
+        rightful_user = User.objects.create_user(username=username1,
+                                                 password=password1,
+                                             )
+        rightful_user.save()
+        username2="someothername"
+        password2="someotherpassword"
+        unanimous_user = User.objects.create_user(username=username2,
+                                                    password=password2,
+                                                )
+        unanimous_user.save()
+
+        self.client.login(username=username2,
+                          password=password2,
         )
+
+        response = self.client.get(reverse('userhome',
+                                           kwargs={'pk':rightful_user.pk,
+                                               },
+                                       )
+                               )
+        assert response.content.decode() == \
+                         render_to_string('deny_user.html')
+
+    def test_rightful_access_not_denied(self):
+        """
+        Assures rightful user is not denied user home page
+        """
+        username="somename"
+        password="somepassword"
+        rightful_user = User.objects.create_user(username=username,
+                                                 password=password,
+                                             )
+        rightful_user.save()
+
+        self.client.login(username=username,
+                          password=password,
+        )
+        response = self.client.get(reverse('userhome',
+                                   kwargs={'pk':rightful_user.pk,
+                                       },
+                                       )
+                               )
+        assert response.content.decode() != \
+                         render_to_string('deny_user.html')
+                    
+    def test_no_access_without_login(self):
+        """
+        Assures login required for access
+        """
+        
+        username="somename"
+        password="somepassword"
+        user = User.objects.create_user(username=username,
+                                        password=password,
+                                             )
+        user.save()
+        response = self.client.get(reverse('userhome',
+                                           kwargs={'pk':user.pk,
+                                               },
+                                       ),
+                                   follow =True,
+                               )
+        assert response.wsgi_request.path == reverse('userlogin')
         

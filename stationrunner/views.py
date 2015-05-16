@@ -61,7 +61,7 @@ class UserHome(View):
                        }
             )
         else:
-            return HttpResponse("Not your page!")
+            return render(request, 'deny_user.html')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
