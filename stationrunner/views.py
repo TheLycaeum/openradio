@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.forms import Form
 from django.views.generic import View
 from django.views.generic.edit import CreateView
-from django.views.generic import DetailView
+#from django.views.generic import DetailView
 #from django.views.generic.edit import UpdateView
 #from django.views.generic.list import ListView
 from django.contrib.auth.models import User
@@ -121,7 +121,7 @@ class StationHome(View):
                        },
                       )
         else:
-            return HttpResponse("This Station doesn't belong to you!")
+            return render(request,'deny_user.html')
 
     def post(self,request, pk):
         station = Station.objects.get(pk=pk)

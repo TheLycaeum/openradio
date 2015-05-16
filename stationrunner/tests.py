@@ -331,7 +331,7 @@ class TestUserHomePage(TestCase):
                                        )
                                )
         assert response.content.decode() != \
-                         render_to_string('deny_user.html')
+            render_to_string('deny_user.html')
                     
     def test_no_access_without_login(self):
         """
@@ -423,4 +423,77 @@ class TestStationListCreate(TestCase):
         response = self.client.get(reverse('list_create_station'))
         assert station1 not in response.context['stations']
         assert station2 not in response.context['stations']
+
+class TestStationHome(TestCase):        
+    def test_login_required(self):
+        """
+        Assures page demands user be logged in
+        """
+        username="someusername"
+        password="somepassword"
+        user = User.objects.create_user(
+            username=username,
+            password=password
+        )
+        user.save()
+        station = Station.objects.create(
+            name="somename",
+            address="someaddress",
+            owner=user
+            )
+        station.save()
+        response = self.client.get(reverse('home_station',
+                                        kwargs={'pk':station.pk
+                                            }
+                                       ),
+                                   follow=True
+                               )
+        assert response.wsgi_request.path == reverse('userlogin')
+            
+    def test_authentication(self):
+        """
+        Assures that only the rightful user can access page
+        """
+        username1="someusername"
+        password1="somepassword"
+        unanimous_user = User.objects.create_user(
+            username=username1,
+            password=password1
+        )
+        unanimous_user.save()
+        username2="someothername"
+        password2="someotherpassword"
+        rightful_user = User.objects.create_user(
+            username=username2,
+            password=password2
+        )
+        rightful_user.save()
+        station_in_question = Station.objects.create(
+            name="somename",
+            address="someaddress",
+            owner=rightful_user
+        )
+        
+        self.client.login(username=username1,password=password1) 
+        response = self.client.get(
+            reverse(
+                'home_station',
+                kwargs={'pk':station_in_question.pk}
+            ),
+            follow = True
+        )
+        assert response.content.decode() == \
+            render_to_string('deny_user.html')
+
+        self.client.login(username=username2,password=password2) 
+        response = self.client.get(
+            reverse(
+                'home_station',
+                kwargs={'pk':station_in_question.pk}
+            ),
+            follow = True
+        )
+        assert response.content.decode() != \
+            render_to_string('deny_user.html')
+        
         
