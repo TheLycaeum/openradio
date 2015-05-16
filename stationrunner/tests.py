@@ -352,3 +352,75 @@ class TestUserHomePage(TestCase):
                                )
         assert response.wsgi_request.path == reverse('userlogin')
         
+class TestStationListCreate(TestCase):
+    def test_authentication(self):
+        """
+        This assures that page for stations is accessible only
+        on login.
+        """
+        response = self.client.get(reverse('list_create_station'),
+                                   follow=True,
+        )
+        assert response.wsgi_request.path == reverse('userlogin')
+    
+    def test_stations_under_user_listed(self):
+        """
+        Assures list of stations contains stations created by
+        logged in user
+        """
+        username = "somename"
+        password = "somepassword"
+        user = User.objects.create_user(username=username,
+                                        password=password,
+                                    )
+        user.save()
+        station1 = Station.objects.create(name="somename",
+                               address="someaddres",
+                               owner=user
+                               )
+        station1.save()
+        station2 = Station.objects.create(name="someothername",
+                               address="someotheraddres",
+                               owner=user
+                               )
+        station2.save()
+
+        self.client.login(username=username,password=password)
+        response = self.client.get(reverse('list_create_station'))
+        assert station1 in response.context['stations']
+        assert station2 in response.context['stations']
+        
+
+    def test_stations_under_different_user_not_listed(self):
+        """
+        Assures list of stations does not contain stations
+        not created by logged in user.
+        """
+        username1 = "somename"
+        password1 = "somepassword"
+        user1 = User.objects.create_user(username=username1,
+                                        password=password1,
+                                    )
+        user1.save()
+        username2 = "someothername"
+        password2 = "someotherpassword"
+        user2 = User.objects.create_user(username=username2,
+                                        password=password2,
+                                    )
+        user2.save()
+        station1 = Station.objects.create(name="somename",
+                               address="someaddres",
+                               owner=user1
+                               )
+        station1.save()
+        station2 = Station.objects.create(name="someothername",
+                               address="someotheraddres",
+                               owner=user1
+                               )
+        station2.save()
+ 
+        self.client.login(username=username2,password=password2)
+        response = self.client.get(reverse('list_create_station'))
+        assert station1 not in response.context['stations']
+        assert station2 not in response.context['stations']
+        
