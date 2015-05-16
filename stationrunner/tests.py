@@ -4,8 +4,8 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import Station
-from .models import Channel
+from .models import Station, Channel
+from .forms import StationForm
 
 
 class TestUserSignUp(TestCase):
@@ -352,7 +352,7 @@ class TestUserHomePage(TestCase):
                                )
         assert response.wsgi_request.path == reverse('userlogin')
         
-class TestStationListCreate(TestCase):
+class TestStationListing(TestCase):
     def test_authentication(self):
         """
         This assures that page for stations is accessible only
@@ -496,4 +496,99 @@ class TestStationHome(TestCase):
         assert response.content.decode() != \
             render_to_string('deny_user.html')
         
-        
+class TestStationManagement(TestCase):
+    def test_create_station(self):
+        """
+        Tests creation of a station object
+        """
+        username='somename'
+        password='somepassword'
+        User.objects.create_user(username=username,
+                                 password=password)
+        self.client.login(username=username,password=password)
+        name='somename'
+        address='someaddress'
+        self.client.post(reverse('actual_create_station'),
+                         {'name':name,'address':address})
+        assert Station.objects.get(name=name,address=address)
+                         
+    def test_add_member(self):
+        """
+        Tests addition of a user to station members
+        """
+        user1 = User.objects.create_user(username='someusername',
+                                        password='somepassword')
+        user1.save()
+        station = Station.objects.create(name='somename',
+                                         address='someaddress',
+                                         owner=user1)
+        station.save()
+        user2 = User.objects.create_user(username='someotherusername',
+                                        password='someotherpassword')
+        user2.save()
+        self.client.post(reverse('add_member',
+                                 kwargs={'pk':station.pk}),
+                         {'user':user2.id})
+        self.assertIn(user2, station.members.all())
+
+    def test_remove_member(self):
+        """
+        Tests removal of a station member
+        """
+        user1 = User.objects.create_user(username='someusername',
+                                        password='somepassword')
+        user1.save()
+        station = Station.objects.create(name='somename',
+                                         address='someaddress',
+                                         owner=user1)
+        station.save()
+        user2 = User.objects.create_user(username='someotherusername',
+                                        password='someotherpassword')
+        user2.save()
+        station.members.add(user2)
+        self.assertIn(user2, station.members.all())
+        self.client.post(reverse('remove_member',
+                                 kwargs={'pk':station.pk}),
+                         {'member':user2.id})
+        self.assertNotIn(user2, station.members.all())
+
+    def test_edit_station(self):
+        """
+        Tests editing of a station object
+        """
+        username = 'somename'
+        password = 'somepassword'
+        user = User.objects.create_user(username=username,
+                                 password=password)
+        user.save()
+        self.client.login(username=username,password=password)
+        name='somename'
+        address='someaddress'
+        station = Station.objects.create(name=name,
+                                         address=address,
+                                         owner=user)
+        station.save()
+        edited_name='someothername'
+        edited_address='someotheraddress'
+        self.client.post(reverse('edit_station', 
+                                 kwargs={'pk':station.pk}),
+                         {'name':edited_name,'address':edited_address})
+        station = Station.objects.get(pk=station.pk)
+        assert station.name == edited_name
+        assert station.address == edited_address
+
+    def test_delete_station(self):
+        """
+        Tests deletion of a station object
+        """
+        username = 'somename'
+        password = 'somepassword'
+        user = User.objects.create_user(username=username,
+                                 password=password)
+        user.save()
+        station = Station.objects.create(owner=user)
+        assert station in Station.objects.all()
+        self.client.login(username=username,password=password)
+        self.client.post(reverse('delete_station',
+                                 kwargs={'pk':station.pk}))
+        assert station not in Station.objects.all()

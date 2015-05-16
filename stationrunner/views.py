@@ -146,8 +146,9 @@ class MemberAdd(View):
         form = AddMemberForm(request.POST)
         if form.is_valid():
             Station.objects.get(pk=pk).members.add(
-                form.cleaned_data['member']
+                form.cleaned_data['user']
             )
+            
         return HttpResponseRedirect(reverse("home_station",
                                             kwargs={'pk':pk},
                                         )
@@ -183,6 +184,16 @@ class StationEdit(View):
                                                 kwargs={'pk':pk},
                                             )
                                     )
+
+class StationDelete(View):
+    def get(self, request):
+        raise Http404
+
+    def post(self, request, pk):
+        station = Station.objects.get(pk=pk).delete()
+        return HttpResponseRedirect(
+            reverse("list_create_station")                      
+            )
                                                 
 class ChannelListCreate(View):
     pass

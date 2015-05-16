@@ -9,6 +9,7 @@ from stationrunner.views import StationHome
 from stationrunner.views import MemberAdd
 from stationrunner.views import MemberRemove
 from stationrunner.views import StationEdit
+from stationrunner.views import StationDelete
 from stationrunner.views import ChannelListCreate
 #from stationrunner.views import ChannelCreate
 #from stationrunner.views import ChannelHome
@@ -35,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^station/(?P<pk>\d+)/addmember$', MemberAdd.as_view(), name='add_member'),
     url(r'^station/(?P<pk>\d+)/removemember$', MemberRemove.as_view(), name='remove_member'),
     url(r'^station/(?P<pk>\d+)/editstation$', StationEdit.as_view(), name='edit_station'),
+    url(r'^station/(?P<pk>\d+)/deletestation$', StationDelete.as_view(), name='delete_station'),
     url(r'^channels$', ChannelListCreate.as_view(), name='list_create_channel'),
     #url(r'^channels/new$', ChannelCreate.as_view(), name='createchannel'),
     #url(r'^channels/edit/(?P<pk>\d+)$', ChannelEdit.as_view(), name='editchannel'),

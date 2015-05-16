@@ -51,6 +51,11 @@
     {% csrf_token %}    
     <input type="submit" value="Edit" />
   </form>
+  
+  <form method="post" action="{% url 'delete_station' station.pk %}">
+    {% csrf_token %}
+    <input type="submit" value="Delete Station" />
+  </form>
 </body>
 
 </html>
