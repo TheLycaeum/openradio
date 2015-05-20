@@ -1,9 +1,10 @@
+import os
 from django import forms
 from django.forms import Form
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from stationrunner.models import Station
+from stationrunner.models import Station, AudioFile
 
 class UserCreateForm(UserCreationForm):
     """
@@ -52,3 +53,21 @@ class RemoveMemberForm(Form):
     member = forms.ModelChoiceField(queryset=User.objects.all(),
                                   empty_label='Choose a Member',
     )
+
+## To Alen, channel related forms here
+
+class AudioFileForm(forms.ModelForm):
+    class Meta:
+        model = AudioFile
+        fields = ['name', 'audio_file']
+
+    def clean_audio_file(self):
+        audio = self.cleaned_data['audio_file']
+        if audio:
+            if audio._size > 5*1024*1024:
+                raise ValidationError("File too large ( > 5mb )")
+            if os.path.splitext(audio.name)[1] != ".mp3":
+                raise ValidationError("We only support mp3!")
+            return audio
+        else:
+            raise validationError("Couldn't read uploaded file")

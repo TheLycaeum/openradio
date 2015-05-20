@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+  <h1>Your Audio Records</h1>
+
+  <ul>
+    {% for audio_file in audio_files %}
+      <li>{{ audio_file }}</li>
+    {% empty %}
+      <li>No songs uploaded</li>
+    {% endfor %}
+  </ul>
+  
+  <form method="post" action="{% url 'list_upload_audio_file' %}">
+    {% csrf_token %}
+    <input type="submit" value="Upload"/>
+  </form>
+</body>
+</html>

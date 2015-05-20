@@ -13,9 +13,12 @@ from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from .models import Station, Channel
+from .models import Station, Channel, AudioFile
+from .utils import handle_uploaded_file
 from .forms import UserCreateForm, StationForm
 from .forms import AddMemberForm, RemoveMemberForm
+from .forms import AudioFileForm
+from .utils import handle_uploaded_file
 
 class UserRegistration(CreateView):
     template_name='auth/register.html'
@@ -223,3 +226,44 @@ class ChannelListCreate(View):
 
 #class ListChannels(ListView):
 #    model = Channel
+
+##To Alen, All channel related views here
+
+class AudioFileListUpload(View):
+    def get(self, request):
+        audio_files = AudioFile.objects.filter(uploader=request.user)
+        return render(request, 
+                      'list_audio_files.html', 
+                      {'audio_files':audio_files})
+
+    def post(self, request):
+        form = AudioFileForm()
+        return render(request, 
+                      'upload_audio_file.html', 
+                      {'form':form})
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AudioFileListUpload, self).dispatch(*args, **kwargs)
+
+class AudioActualUpload(View):
+    def get(self, request):
+        raise Http404
+        
+    def post(self, request):
+        form = AudioFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            audio_file = form.save(commit=False)
+            audio_file.uploader = request.user
+            audio_file.save()
+            return HttpResponseRedirect(
+                reverse('home_audio',kwargs={'pk':audio_file.pk})
+                )
+        else:
+            return HttpResponse(form.errors)
+
+class AudioFileHome(View):
+    def get(self, request, pk):
+        return HttpResponse("Ippa sheriyakkithara:)")
+    def post(self, request, pk):
+        pass

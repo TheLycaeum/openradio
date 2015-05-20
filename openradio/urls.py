@@ -11,12 +11,10 @@ from stationrunner.views import MemberRemove
 from stationrunner.views import StationEdit
 from stationrunner.views import StationDelete
 from stationrunner.views import ChannelListCreate
-#from stationrunner.views import ChannelCreate
-#from stationrunner.views import ChannelHome
-#from stationrunner.views import ChannelEdit
-#from stationrunner.views import ListChannels
-#from stationrunner.views import ChannelManage
-
+#To Alen, channel related views import here
+from stationrunner.views import AudioFileListUpload
+from stationrunner.views import AudioActualUpload
+from stationrunner.views import AudioFileHome
 
 urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
@@ -29,7 +27,6 @@ urlpatterns = patterns('',
     url(r'^users$', UserRegistration.as_view( ), name='userregistration'),
     url(r'^user_redirect/', views.user_redirect, name='userredirect'),
     url(r'^user/(?P<pk>\d+)$', UserHome.as_view(), name='userhome'),
-    #url(r'^(?P<username>\s+)/edit/', UserEdit.as_view(), name='useredit'),
     url(r'^stations$', StationListCreate.as_view(), name='list_create_station'),
     url(r'^createstation$', StationActualCreate.as_view(), name='actual_create_station'),
     url(r'^station/(?P<pk>\d+)$', StationHome.as_view(), name='home_station'),
@@ -38,9 +35,8 @@ urlpatterns = patterns('',
     url(r'^station/(?P<pk>\d+)/editstation$', StationEdit.as_view(), name='edit_station'),
     url(r'^station/(?P<pk>\d+)/deletestation$', StationDelete.as_view(), name='delete_station'),
     url(r'^channels$', ChannelListCreate.as_view(), name='list_create_channel'),
-    #url(r'^channels/new$', ChannelCreate.as_view(), name='createchannel'),
-    #url(r'^channels/edit/(?P<pk>\d+)$', ChannelEdit.as_view(), name='editchannel'),
-    #url(r'^channels/(?P<pk>\d+)$', ChannelHome.as_view(), name='viewchannel'),
-    #url(r'^channels$', ListChannels.as_view(), name = 'listchannels'),
-
-)       
+    ##To Alen, all channel related urls here
+    url(r'^audio_files$', AudioFileListUpload.as_view(), name='list_upload_audio_file'),       
+    url(r'^uploadaudio$', AudioActualUpload.as_view(), name='actual_upload_audio'),
+    url(r'^audio_files/(?P<pk>\d+)$', AudioFileHome.as_view(), name='home_audio'),
+)

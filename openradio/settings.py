@@ -97,3 +97,5 @@ ABSOLUTE_URL_OVERRIDES = {
 }
 
 LOGIN_URL = '/'
+
+MEDIA_ROOT = '/home/afzalsh/works/openradio/audio_files/'
