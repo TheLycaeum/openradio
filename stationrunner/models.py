@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class Station(models.Model):
     name = models.CharField(max_length=50)
-    address = models.TextField(default='')
-    owner = models.ForeignKey(User,default='')
+    address = models.TextField()
+    owner = models.ForeignKey(User)
     members = models.ManyToManyField(User,related_name='members')
 
     def __unicode__(self):
@@ -46,7 +46,7 @@ class AudioFile(models.Model):
     name = models.CharField(max_length=100)
     audio_file = models.FileField()
     tags = ListField()
-    uploader = models.ForeignKey(User,default='')
+    uploader = models.ForeignKey(User)
 
     def __unicode__(self):
         return self.name        
@@ -57,8 +57,8 @@ class Playlist(models.Model):
 class Channel(models.Model):
     name = models.CharField(max_length=50)
     frequency = models.CharField(max_length=50)
-    owner = models.ForeignKey(User,default='')
-    station = models.ForeignKey(Station,default='')
+    owner = models.ForeignKey(User)
+    station = models.ForeignKey(Station)
     playlists = models.ManyToManyField(Playlist)
 
     def __unicode__(self):
