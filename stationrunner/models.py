@@ -19,33 +19,16 @@ class Station(models.Model):
 #   Finally, to check membership of a user we can simply do
 #   "assert <object_name> in <object_name>.members.all()"
 
-class ListField(models.TextField):
-    __metaclass__ = models.SubfieldBase
-    description = "Stores a python list"
-
-    def __init__(self, *args, **kwargs):
-        super(ListField, self).__init__(*args, **kwargs)
-        
-    def to_python(self, value):
-        if not value:
-            value = []
-        if isinstance(value, list):
-            return value
-        return ast.literal_eval(value)
-
-    def get_prep_value(self, value):
-        if value is None:
-            return value
-        return unicode(value)
-
-    def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
-        return self.get_db_prep_value(value)
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
     
+    def __unicode__(self):
+        return self.name
+
 class AudioFile(models.Model):
     name = models.CharField(max_length=100)
     audio_file = models.FileField()
-    tags = ListField()
+    tags = models.ManyToManyField(Tag)
     uploader = models.ForeignKey(User)
 
     def __unicode__(self):

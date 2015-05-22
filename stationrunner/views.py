@@ -13,12 +13,11 @@ from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from .models import Station, Channel, AudioFile
+from .models import Station, Channel, AudioFile, Tag
 from .utils import handle_uploaded_file
 from .forms import UserCreateForm, StationForm
 from .forms import AddMemberForm, RemoveMemberForm
-from .forms import AudioFileForm
-from .utils import handle_uploaded_file
+from .forms import AudioFileForm, TagForm
 
 class UserRegistration(CreateView):
     template_name='auth/register.html'
@@ -75,7 +74,8 @@ class StationListCreate(View):
         stations = Station.objects.filter(owner=request.user)
         return render(request,
                       'list_stations.html',
-                      {'stations':stations},
+                      {'stations':stations,
+                       'user':request.user},
         )
 
     def post(self, request):
@@ -151,11 +151,8 @@ class MemberAdd(View):
             Station.objects.get(pk=pk).members.add(
                 form.cleaned_data['user']
             )
-            
         return HttpResponseRedirect(reverse("home_station",
-                                            kwargs={'pk':pk},
-                                        )
-                                )
+                                            kwargs={'pk':pk}))
 
 class MemberRemove(View):
     def get(self, request):
@@ -193,7 +190,7 @@ class StationDelete(View):
         raise Http404
 
     def post(self, request, pk):
-        station = Station.objects.get(pk=pk).delete()
+        Station.objects.get(pk=pk).delete()
         return HttpResponseRedirect(
             reverse("list_create_station")                      
             )
@@ -260,10 +257,73 @@ class AudioActualUpload(View):
                 reverse('home_audio',kwargs={'pk':audio_file.pk})
                 )
         else:
-            return HttpResponse(form.errors)
+            return HttpResponse("Form Invalid!")
 
 class AudioFileHome(View):
     def get(self, request, pk):
-        return HttpResponse("Ippa sheriyakkithara:)")
+        audio_file = AudioFile.objects.get(pk=pk)
+        if audio_file.uploader == request.user:
+            added_tags = audio_file.tags.all()
+            form1 = TagForm()
+            form2 = NewTagForm()
+            form3 = TagForm()
+            form3.Fields['tag'].queryset = added_tags
+            return render(request,
+                          'home_audio_file.html',
+                          {'audio_file':audio_file,
+                           'added_tags':added_tags,
+                           'form1':form1,
+                           'form2':form2,
+                           'form3':form3})
+        else:
+            return render(request,'deny_user.html')
+
     def post(self, request, pk):
-        pass
+        AudioFile.objects.get(pk=pk).delete()
+        return HttpResponseRedirect(
+            reverse("list_upload_audio_file")
+            )
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AudioFileHome, self).dispatch(*args, **kwargs)
+
+
+class TagAdd(View):
+    def get(self, request, pk):
+        return Http404
+
+    def post(self, request, pk):
+        form = TagForm(request.POST)
+        if form.is_valid():
+            AudioFile.objects.get(pk=pk).tags.add(
+                form.cleaned_data['tag']
+            )
+        return HttpResponseRedirect(reverse("home_audio_file",
+                                            kwargs={'pk':pk}))
+
+class TagRemove(View):
+    def get(self, request, pk):
+        return Http404
+
+    def post(self, request, pk):
+        form = TagForm(request.POST)
+        if form.is_valid():
+            AudioFile.objects.get(pk=pk).tags.remove(
+                form.cleaned_data['tag']
+            )
+        return HttpResponseRedirect(reverse("home_audio_file",
+                                            kwargs={'pk':pk}))
+
+class TagCreateAdd(View):
+    def get(self, request, pk):
+        return Http404
+
+    def post(self, request, pk):
+        form = NewTagForm(request.POST)
+        if form.is_valid():
+            tag = Tag.objects.create(name=form.cleaned_data['name'])
+            tag.save()
+            AudioFile.objects.get(pk=pk).tags.add(tag)
+        return HttpResponseRedirect(reverse("home_audio_file",
+                                            kwargs={'pk':pk}))

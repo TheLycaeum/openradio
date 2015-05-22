@@ -15,6 +15,9 @@ from stationrunner.views import ChannelListCreate
 from stationrunner.views import AudioFileListUpload
 from stationrunner.views import AudioActualUpload
 from stationrunner.views import AudioFileHome
+from stationrunner.views import TagAdd
+from stationrunner.views import TagCreateAdd
+from stationrunner.views import TagRemove
 
 urlpatterns = patterns('',
     #url(r'^admin/', include(admin.site.urls)),
@@ -38,5 +41,8 @@ urlpatterns = patterns('',
     ##To Alen, all channel related urls here
     url(r'^audio_files$', AudioFileListUpload.as_view(), name='list_upload_audio_file'),       
     url(r'^uploadaudio$', AudioActualUpload.as_view(), name='actual_upload_audio'),
-    url(r'^audio_files/(?P<pk>\d+)$', AudioFileHome.as_view(), name='home_audio'),
+    url(r'^audio_file/(?P<pk>\d+)$', AudioFileHome.as_view(), name='home_audio'),
+    url(r'^audio_file/(?P<pk>\d+)/addtag$', TagAdd.as_view(), name='add_tag'),
+    url(r'^audio_file/(?P<pk>\d+)/createaddtag$', TagCreateAdd.as_view(), name='create_add_tag'),
+    url(r'^audio_file/(?P<pk>\d+)/removetag$', TagRemove.as_view(), name='remove_tag'),
 )

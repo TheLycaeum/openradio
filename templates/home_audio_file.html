@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+  <h1>{{ audio_file }}</h1>
+
+  <h2>Tags</h2>
+  <ul>
+    {% for tag in added_tags %}
+    <li>{{ tag }}</li>
+    {% empty %}
+    <li>No tags attached!</li>
+  </ul>
+
+  <h2>Add a tag</h2>
+  <form method="post" action="{% url 'add_tag' audio_file.pk %}">
+    {% csrf_token %}
+    {{ form1 }}
+    <input type="submit" value="Add"/>
+  </form>
+
+  <h2>Create a new tag and add</h2>
+  <form method="post" action="{% url 'create_add_tag' audio_file.pk %}">
+    {% csrf_token %}
+    {{ form2 }}
+    <input type="submit" value="Create and add"/>
+  </form>
+
+  <h2>Remove tag</h2>
+  <form method="post" action="{% url 'remove_tag' audio_file.pk %}">
+    {% csrf_token %}
+    {{ form3 }}
+    <input type="submit" value="Add"/>
+  </form>
+
+  <h2>Delete audio file</h2>
+  <form method="post" action="">
+    {% csrf_token %}
+    <input type="submit" value="Delete" />
+  </form>
+
+  <a href="{% url 'userhome' user.pk %}">Home</a>    
+</body>
+</html>

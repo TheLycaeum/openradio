@@ -10,5 +10,12 @@
     {% csrf_token %}
     <input type="submit" value="Create a new Station" />
   </form>
+
+  <p><a href="{% url 'list_upload_audio_file' %}">View audio files you uploaded</a></p>
+  <form name="upload_audio" id="upload_audio" method="post" action="{% url 'list_upload_audio_file' %}">
+    {% csrf_token %}
+    <input type="submit" value="Upload a new audio file" />
+  </form>
+
 </body>
 </html>
