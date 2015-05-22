@@ -1,11 +1,14 @@
+import os
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import Station, Channel
-from .forms import StationForm
+from django.core.files.uploadedfile import SimpleUploadedFile
+from openradio import settings
+from .models import Station, Channel, AudioFile
+from .forms import StationForm, AudioFileForm
 
 
 class TestUserSignUp(TestCase):
@@ -592,3 +595,28 @@ class TestStationManagement(TestCase):
         self.client.post(reverse('delete_station',
                                  kwargs={'pk':station.pk}))
         assert station not in Station.objects.all()
+
+## Channel related tests here
+
+class TestAudioFileManagement(TestCase):
+    def test_audio_upload(self):
+        """
+        Tests uploading of audio
+        """
+        User.objects.create_user(username="somename",
+                            password="somepassword")
+        self.client.login(username="somename",
+                          password="somepassword")
+        name = "somename"
+        audio_file = SimpleUploadedFile(
+            'test_audio.mp3', 
+            open('/home/afzalsh/works/openradio/test_files/test_audio.mp3','rb').read(),
+            content_type='audio'
+        )
+        self.client.post(reverse('actual_upload_audio'),
+                         {'name':name,
+                          'audio_file':audio_file})
+        assert AudioFile.objects.get(name=name)
+        uploaded_file = settings.MEDIA_ROOT+'/test_audio.mp3'
+        assert os.path.exists(uploaded_file)
+        os.remove(uploaded_file)
