@@ -4,7 +4,7 @@ from django.forms import Form
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from stationrunner.models import Station, AudioFile
+from stationrunner.models import Station, AudioFile, Channel
 
 class UserCreateForm(UserCreationForm):
     """
@@ -55,6 +55,15 @@ class RemoveMemberForm(Form):
     )
 
 ## To Alen, channel related forms here
+class ChannelForm(Form):
+     # class Meta:
+     #    model = Channel
+     #    fields = ['name', 'frequency']
+    name = forms.CharField()
+    frequency = forms.CharField(widget=forms.Textarea)
+    station = forms.ModelChoiceField(queryset=Station.objects.all())
+
+########################################
 
 class AudioFileForm(forms.ModelForm):
     class Meta:
