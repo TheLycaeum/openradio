@@ -14,11 +14,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .models import Station, Channel, AudioFile
-from .utils import handle_uploaded_file
-from .forms import UserCreateForm, StationForm
+#from django.utils import handle_uploaded_file
+from .forms import UserCreateForm, StationForm, ChannelForm
 from .forms import AddMemberForm, RemoveMemberForm
 from .forms import AudioFileForm
-from .utils import handle_uploaded_file
 
 class UserRegistration(CreateView):
     template_name='auth/register.html'
@@ -198,8 +197,8 @@ class StationDelete(View):
             reverse("list_create_station")                      
             )
                                                 
-class ChannelListCreate(View):
-    pass
+# class ChannelListCreate(View):
+#     pass
 
 #class ChannelCreate(CreateView):
 #    model = Channel
@@ -228,7 +227,54 @@ class ChannelListCreate(View):
 #    model = Channel
 
 ##To Alen, All channel related views here
+class Channels(View):
+    def get(self, request):
+        stations =Station.objects.filter(owner=request.user)
+        channels = Channel.objects.all()
+        return render(request,
+                      'list_channels.html',
+                      {'channels':channels},
+        )
+    def post(self, request):
+        form = ChannelForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            frequency = form.cleaned_data['frequency']
+            owner = request.user
+            station = form.cleaned_data['station']
+            #s_name = station.name
+            new_channel_object = Channel(name=name,
+                                         frequency=frequency,
+                                         owner = owner,
+                                         station = station
+                                         )
+            new_channel_object.save()
+            return HttpResponseRedirect(reverse("channels"))#, kwargs = {'pk':new_channel_object.id}))
+        form.fields['station'].queryset=Station.objects.filter(owner=request.user)
+        return render(request, 'create_channel.html', {'form': form})
+        #pass
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(Channels, self).dispatch(*args, **kwargs)
+
+    # def channelcreate(self, request):
+    #     if request.method == 'POST':
+    #         form = ChannelForm(request.POST)
+    #         if form.is_valid():
+    #             name = form.cleaned_data['name']
+    #             frequency = form.cleaned_data['frequency']
+    #             owner = request.user
+    #             station = Station.objects.filter(owner=request.user)
+    #             new_channel_object = Channel(name=name,
+    #                                          frequency=frequency,
+    #                                          owner = owner,
+    #                                          station = station
+    #                                          )
+    #             new_channel_object.save()
+    #             return HttpResponseRedirect(reverse("channels", kwargs = {'pk':new_channel_object.id}))
+
+########################################
 class AudioFileListUpload(View):
     def get(self, request):
         audio_files = AudioFile.objects.filter(uploader=request.user)
