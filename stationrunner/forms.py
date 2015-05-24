@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from stationrunner.models import Station, AudioFile, Channel
+from stationrunner.models import Station, AudioFile, Tag
 
 class UserCreateForm(UserCreationForm):
     """
@@ -46,13 +47,11 @@ class StationForm(ModelForm):
 
 class AddMemberForm(Form):
     user = forms.ModelChoiceField(queryset=User.objects.all(),
-                                  empty_label='Choose a User',
-    )
+                                  empty_label='Choose a User')
 
 class RemoveMemberForm(Form):
     member = forms.ModelChoiceField(queryset=User.objects.all(),
-                                  empty_label='Choose a Member',
-    )
+                                  empty_label='Choose a Member')
 
 ## To Alen, channel related forms here
 class ChannelForm(Form):
@@ -65,7 +64,7 @@ class ChannelForm(Form):
 
 ########################################
 
-class AudioFileForm(forms.ModelForm):
+class AudioFileForm(ModelForm):
     class Meta:
         model = AudioFile
         fields = ['name', 'audio_file']
@@ -80,3 +79,12 @@ class AudioFileForm(forms.ModelForm):
             return audio
         else:
             raise validationError("Couldn't read uploaded file")
+
+class TagForm(Form):
+    tag = forms.ModelChoiceField(queryset=Tag.objects.all(),
+                                 empty_label='Choose a tag')
+
+class NewTagForm(ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name']

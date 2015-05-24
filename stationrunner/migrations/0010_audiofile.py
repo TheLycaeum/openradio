@@ -20,7 +20,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
                 ('audio_file', models.FileField(upload_to=b'')),
-                ('tags', stationrunner.models.ListField()),
                 ('uploader', models.ForeignKey(default=b'', to=settings.AUTH_USER_MODEL)),
             ],
             options={

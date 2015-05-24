@@ -18,5 +18,7 @@
     {% csrf_token %}
     <input type="submit" value="Upload"/>
   </form>
+
+  <a href="{% url 'userhome' user.pk %}">Home</a>
 </body>
 </html>
