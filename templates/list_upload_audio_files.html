@@ -14,11 +14,14 @@
     {% endfor %}
   </ul>
   
-  <form method="post" action="{% url 'list_upload_audio_file' %}">
+  <h2>Upload a new audio</h2>
+  <form method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
+    {{ form }}
     <input type="submit" value="Upload"/>
   </form>
 
+  <p></p>
   <a href="{% url 'userhome' user.pk %}">Home</a>
 </body>
 </html>

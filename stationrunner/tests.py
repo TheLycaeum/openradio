@@ -511,7 +511,7 @@ class TestStationManagement(TestCase):
         self.client.login(username=username,password=password)
         name='somename'
         address='someaddress'
-        self.client.post(reverse('actual_create_station'),
+        self.client.post(reverse('list_create_station'),
                          {'name':name,'address':address})
         assert Station.objects.get(name=name,address=address)
                          
@@ -613,7 +613,7 @@ class TestAudioFileManagement(TestCase):
             open('/home/afzalsh/works/openradio/test_files/test_audio.mp3','rb').read(),
             content_type='audio'
         )
-        self.client.post(reverse('actual_upload_audio'),
+        self.client.post(reverse('list_upload_audio_file'),
                          {'name':name,
                           'audio_file':audio_file})
         assert AudioFile.objects.get(name=name)

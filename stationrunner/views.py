@@ -77,23 +77,13 @@ class UserHome(View):
 class StationListCreate(View):
     def get(self, request):
         stations = Station.objects.filter(owner=request.user)
-        return render(request,
-                      'list_stations.html',
-                      {'stations':stations,
-                       'user':request.user},
-        )
-
-    def post(self, request):
         form = StationForm()
-        return render(request, 'create_station.html', {'form': form})
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(StationListCreate, self).dispatch(*args, **kwargs)
-
-class StationActualCreate(View):
-    def get(self, request):
-        raise Http404
+        return render(request,
+                      'list_create_stations.html',
+                      {'stations':stations,
+                       'user':request.user,
+                       'form':form},
+        )
 
     def post(self, request):
         form = StationForm(request.POST)
@@ -109,6 +99,10 @@ class StationActualCreate(View):
             return HttpResponseRedirect(reverse("home_station", 
                                                 kwargs={'pk': new_station_object.id}
             ))
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StationListCreate, self).dispatch(*args, **kwargs)
             
 class StationHome(View):
     def get(self, request, pk):
@@ -281,24 +275,12 @@ class Channels(View):
 class AudioFileListUpload(View):
     def get(self, request):
         audio_files = AudioFile.objects.filter(uploader=request.user)
-        return render(request, 
-                      'list_audio_files.html', 
-                      {'audio_files':audio_files})
-
-    def post(self, request):
         form = AudioFileForm()
         return render(request, 
-                      'upload_audio_file.html', 
-                      {'form':form})
+                      'list_upload_audio_files.html', 
+                      {'audio_files':audio_files,
+                       'form':form})
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AudioFileListUpload, self).dispatch(*args, **kwargs)
-
-class AudioActualUpload(View):
-    def get(self, request):
-        raise Http404
-        
     def post(self, request):
         form = AudioFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -310,6 +292,10 @@ class AudioActualUpload(View):
                 )
         else:
             return HttpResponse("Form Invalid!")
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AudioFileListUpload, self).dispatch(*args, **kwargs)
 
 class AudioFileHome(View):
     def get(self, request, pk):

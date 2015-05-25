@@ -16,12 +16,16 @@
       <li >{{ station }}</li> 
     {% empty %}
       <li>You have not created any stations yet!</li>
-      <form method="post" action="{% url 'list_create_station' %}">
-	{% csrf_token %}
-	<input type="submit" value="Create one"/>
-      </form>
     {% endfor %}
   </ul>
+
+  <h2>Create a new station</h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Create" />
+  </form>
+
 
   <a href="{% url 'userhome' user.pk %}">Home</a>
 </body>
