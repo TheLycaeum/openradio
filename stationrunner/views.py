@@ -113,11 +113,14 @@ class StationHome(View):
             form1 = AddMemberForm()
             form2 = RemoveMemberForm()
             form2.fields['member'].queryset = station.members.all()
+            form3 = StationForm({'name':station.name,
+                                 'address':station.address})
             return render(request, 
                           "home_station.html",
                           {"station":station,
                            "form1":form1,
                            "form2":form2,
+                           "form3":form3,
                            "channels":channels,
                            "members":members,
                        },
@@ -127,14 +130,22 @@ class StationHome(View):
 
     def post(self,request, pk):
         station = Station.objects.get(pk=pk)
-        form = StationForm({'name': station.name,
-                            'address': station.address,
-                        }
-                       )
-        return render(request, 'edit_station.html', {'form':form,
-                                                     'station':station
-                                                 }
-        )
+        form = StationForm(request.POST, instance=station)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("home_station",
+                                                kwargs={'pk':pk},
+                                            )
+                                    )
+        else:
+            return HttpResponse("Form Invalid!")
+
+##    def delete(self, request, pk):
+##        Station.objects.get(pk=pk).delete()
+##        return HttpResponseRedirect(
+##            reverse("list_create_station")                      
+##            )
+
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -167,32 +178,6 @@ class MemberRemove(View):
                                                 kwargs={'pk':pk},
                                             )
                                     )
-
-class StationEdit(View):
-    def get(self, request):
-        raise Http404
-
-    def post(self, request, pk):
-        form = StationForm(request.POST)
-        if form.is_valid():
-            station = Station.objects.get(pk=pk)
-            station.name = form.cleaned_data['name']
-            station.address = form.cleaned_data['address']
-            station.save()
-            return HttpResponseRedirect(reverse("home_station",
-                                                kwargs={'pk':pk},
-                                            )
-                                    )
-
-class StationDelete(View):
-    def get(self, request):
-        raise Http404
-
-    def post(self, request, pk):
-        Station.objects.get(pk=pk).delete()
-        return HttpResponseRedirect(
-            reverse("list_create_station")                      
-            )
                                                 
 # class ChannelListCreate(View):
 #     pass

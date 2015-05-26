@@ -1,19 +1,17 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from stationrunner import views
 from stationrunner.views import UserRegistration
 from stationrunner.views import UserHome
 from stationrunner.views import StationListCreate
 from stationrunner.views import StationHome
 from stationrunner.views import MemberAdd
 from stationrunner.views import MemberRemove
-from stationrunner.views import StationEdit
-from stationrunner.views import StationDelete
 #from stationrunner.views import ChannelListCreate
 #To Alen, channel related views import here
 from stationrunner.views import Channels
 from stationrunner.views import AudioFileListUpload
 from stationrunner.views import AudioFileHome
-from stationrunner import views
 from stationrunner.views import TagAdd
 from stationrunner.views import TagCreateAdd
 from stationrunner.views import TagRemove
@@ -33,8 +31,6 @@ urlpatterns = patterns('',
     url(r'^station/(?P<pk>\d+)$', StationHome.as_view(), name='home_station'),
     url(r'^station/(?P<pk>\d+)/addmember$', MemberAdd.as_view(), name='add_member'),
     url(r'^station/(?P<pk>\d+)/removemember$', MemberRemove.as_view(), name='remove_member'),
-    url(r'^station/(?P<pk>\d+)/editstation$', StationEdit.as_view(), name='edit_station'),
-    url(r'^station/(?P<pk>\d+)/deletestation$', StationDelete.as_view(), name='delete_station'),
     #url(r'^channels$', ChannelListCreate.as_view(), name='list_create_channel'),
     ##To Alen, all channel related urls here
     url(r'^channels$', Channels.as_view(), name='channels'),

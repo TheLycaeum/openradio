@@ -1,7 +1,19 @@
-<!DOCTYPE html/>
+<!DOCTYPE html>
 <html>
 
 <head>
+<!--
+  <script src="jquery-1.11.3.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $.ajax({
+        id : 'delete',
+        headers : {'X_METHODOVERRIDE': 'DELETE'}
+      });
+    });
+  </script>
+-->
 </head>
 
 <body>
@@ -9,19 +21,7 @@
   <p>Address: {{ station.address }}</p>
   <p>Owner: {{ station.owner }}</p>
 
-  <h2>Channels under the station</h2>
-  <ul>    
-    {% for channel in channels %}
-    <li>{{ channel }}</li>
-    {% empty %}
-    <li>You haven't created any channel yet</li>
-    {% endfor %}
-  </ul>
-
-  <form name="create_channel" method="post" action="{% url 'channels' %}">
-    {% csrf_token %}
-    <input type="submit" value="Create a new channel" />
-  </form>
+  <a href="{% url 'channels' %}"><h2>Channels</h2></a>
 
   <h2>Station Members</h2>
   <ul>    
@@ -46,18 +46,22 @@
     <input type="submit" value="Remove" />
   </form>
 
-  <h3>Edit Station Details??</h3>
-  <form method="post" action="{% url 'home_station' station.pk %}">
+  <h3>Edit Station name and/or address</h3>
+  <form method="post" action="">
     {% csrf_token %}    
+    {{ form3 }}
     <input type="submit" value="Edit" />
   </form>
   
-  <form method="post" action="{% url 'delete_station' station.pk %}">
+<!--
+  <h3>Delete Station!</h3>
+  <form method="post" id="delete" name="delete" action="">
     {% csrf_token %}
-    <input type="submit" value="Delete Station" />
+    <input type="submit" value="Delete" />
   </form>
+-->
 
-  <a href="{% url 'userhome' user.pk %}">Home</a>
+  <a href="{% url 'userhome' user.pk %}"><h1>Home</h1></a>
 </body>
 
 </html>
