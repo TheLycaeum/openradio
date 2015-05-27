@@ -2,14 +2,19 @@
 <html>
 
 <head>
-<!--
+<!--  
   <script src="jquery-1.11.3.js"></script>
 
   <script>
     $(document).ready(function(){
-      $.ajax({
-        id : 'delete',
-        headers : {'X_METHODOVERRIDE': 'DELETE'}
+      $('#delete').submit.function(e){
+        e.preventDefault();
+        var station_id = {{ station.id }}
+        $.ajax({
+            type: 'POST',
+            url: '/station/' + station_id,
+            headers: {'X_METHODOVERRIDE': 'DELETE'}
+        });
       });
     });
   </script>
@@ -33,7 +38,7 @@
   </ul>
   
   <h3>Add a new member</h3>
-  <form method="post" action="{% url 'add_member' station.pk %}">
+  <form method="post" action="{% url 'members' station.pk %}">
     {% csrf_token %}
     {{ form1 }}
     <input type="submit" value="Add" />
@@ -53,13 +58,11 @@
     <input type="submit" value="Edit" />
   </form>
   
-<!--
   <h3>Delete Station!</h3>
-  <form method="post" id="delete" name="delete" action="">
+  <form method="post" action="{% url 'delete_station' station.id %}">
     {% csrf_token %}
     <input type="submit" value="Delete" />
   </form>
--->
 
   <a href="{% url 'userhome' user.pk %}"><h1>Home</h1></a>
 </body>

@@ -74,12 +74,12 @@ class UserHome(View):
     def dispatch(self, *args, **kwargs):
         return super(UserHome, self).dispatch(*args, **kwargs)
 
-class StationListCreate(View):
+class Stations(View):
     def get(self, request):
         stations = Station.objects.filter(owner=request.user)
         form = StationForm()
         return render(request,
-                      'list_create_stations.html',
+                      'stations.html',
                       {'stations':stations,
                        'user':request.user,
                        'form':form},
@@ -102,7 +102,7 @@ class StationListCreate(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(StationListCreate, self).dispatch(*args, **kwargs)
+        return super(Stations, self).dispatch(*args, **kwargs)
             
 class StationHome(View):
     def get(self, request, pk):
@@ -137,21 +137,22 @@ class StationHome(View):
                                                 kwargs={'pk':pk},
                                             )
                                     )
-        else:
-            return HttpResponse("Form Invalid!")
-
-##    def delete(self, request, pk):
-##        Station.objects.get(pk=pk).delete()
-##        return HttpResponseRedirect(
-##            reverse("list_create_station")                      
-##            )
-
-
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(StationHome, self).dispatch(*args, **kwargs)
 
-class MemberAdd(View): 
+
+class StationDelete(View):
+    def get(self, request):
+        raise Http404
+
+    def post(self, request, pk):
+        Station.objects.get(pk=pk).delete()
+        return HttpResponseRedirect(
+            reverse("stations")                      
+            )
+
+class Members(View): 
     def get(self, request):
         raise Http404
 
@@ -257,12 +258,12 @@ class Channels(View):
     #             return HttpResponseRedirect(reverse("channels", kwargs = {'pk':new_channel_object.id}))
 
 ########################################
-class AudioFileListUpload(View):
+class AudioFiles(View):
     def get(self, request):
         audio_files = AudioFile.objects.filter(uploader=request.user)
         form = AudioFileForm()
         return render(request, 
-                      'list_upload_audio_files.html', 
+                      'audio_files.html', 
                       {'audio_files':audio_files,
                        'form':form})
 
@@ -280,7 +281,7 @@ class AudioFileListUpload(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(AudioFileListUpload, self).dispatch(*args, **kwargs)
+        return super(AudioFiles, self).dispatch(*args, **kwargs)
 
 class AudioFileHome(View):
     def get(self, request, pk):
@@ -304,12 +305,25 @@ class AudioFileHome(View):
     def post(self, request, pk):
         AudioFile.objects.get(pk=pk).delete()
         return HttpResponseRedirect(
-            reverse("list_upload_audio_file")
+            reverse("audio_files")
             )
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AudioFileHome, self).dispatch(*args, **kwargs)
+
+class Tags(View):
+    def get(self, request, pk):
+        return Http404
+
+    def post(self, request, pk):
+        form = NewTagForm(request.POST)
+        if form.is_valid():
+            tag = Tag.objects.create(name=form.cleaned_data['name'])
+            tag.save()
+            AudioFile.objects.get(pk=pk).tags.add(tag)
+        return HttpResponseRedirect(reverse("home_audio_file",
+                                            kwargs={'pk':pk}))
 
 
 class TagAdd(View):
@@ -338,15 +352,3 @@ class TagRemove(View):
         return HttpResponseRedirect(reverse("home_audio_file",
                                             kwargs={'pk':pk}))
 
-class TagCreateAdd(View):
-    def get(self, request, pk):
-        return Http404
-
-    def post(self, request, pk):
-        form = NewTagForm(request.POST)
-        if form.is_valid():
-            tag = Tag.objects.create(name=form.cleaned_data['name'])
-            tag.save()
-            AudioFile.objects.get(pk=pk).tags.add(tag)
-        return HttpResponseRedirect(reverse("home_audio_file",
-                                            kwargs={'pk':pk}))

@@ -361,7 +361,7 @@ class TestStationListing(TestCase):
         This assures that page for stations is accessible only
         on login.
         """
-        response = self.client.get(reverse('list_create_station'),
+        response = self.client.get(reverse('stations'),
                                    follow=True,
         )
         assert response.wsgi_request.path == reverse('userlogin')
@@ -389,7 +389,7 @@ class TestStationListing(TestCase):
         station2.save()
 
         self.client.login(username=username,password=password)
-        response = self.client.get(reverse('list_create_station'))
+        response = self.client.get(reverse('stations'))
         assert station1 in response.context['stations']
         assert station2 in response.context['stations']
         
@@ -423,7 +423,7 @@ class TestStationListing(TestCase):
         station2.save()
  
         self.client.login(username=username2,password=password2)
-        response = self.client.get(reverse('list_create_station'))
+        response = self.client.get(reverse('stations'))
         assert station1 not in response.context['stations']
         assert station2 not in response.context['stations']
 
@@ -511,7 +511,7 @@ class TestStationManagement(TestCase):
         self.client.login(username=username,password=password)
         name='somename'
         address='someaddress'
-        self.client.post(reverse('list_create_station'),
+        self.client.post(reverse('stations'),
                          {'name':name,'address':address})
         assert Station.objects.get(name=name,address=address)
                          
@@ -529,7 +529,7 @@ class TestStationManagement(TestCase):
         user2 = User.objects.create_user(username='someotherusername',
                                         password='someotherpassword')
         user2.save()
-        self.client.post(reverse('add_member',
+        self.client.post(reverse('members',
                                  kwargs={'pk':station.pk}),
                          {'user':user2.id})
         self.assertIn(user2, station.members.all())
@@ -580,21 +580,21 @@ class TestStationManagement(TestCase):
         assert station.name == edited_name
         assert station.address == edited_address
 
-##    def test_delete_station(self):
-##        """
-##        Tests deletion of a station object
-##        """
-##        username = 'somename'
-##        password = 'somepassword'
-##        user = User.objects.create_user(username=username,
-##                                 password=password)
-##        user.save()
-##        station = Station.objects.create(owner=user)
-##        assert station in Station.objects.all()
-##        self.client.login(username=username,password=password)
-##        self.client.delete(reverse('home_station',
-##                                 kwargs={'pk':station.pk}))
-##        assert station not in Station.objects.all()
+    def test_delete_station(self):
+        """
+        Tests deletion of a station object
+        """
+        username = 'somename'
+        password = 'somepassword'
+        user = User.objects.create_user(username=username,
+                                 password=password)
+        user.save()
+        station = Station.objects.create(owner=user)
+        assert station in Station.objects.all()
+        self.client.login(username=username,password=password)
+        self.client.post(reverse('delete_station',
+                                 kwargs={'pk':station.pk}))
+        assert station not in Station.objects.all()
 
 ## Channel related tests here
 
@@ -613,7 +613,7 @@ class TestAudioFileManagement(TestCase):
             open('/home/afzalsh/works/openradio/test_files/test_audio.mp3','rb').read(),
             content_type='audio'
         )
-        self.client.post(reverse('list_upload_audio_file'),
+        self.client.post(reverse('audio_files'),
                          {'name':name,
                           'audio_file':audio_file})
         assert AudioFile.objects.get(name=name)
