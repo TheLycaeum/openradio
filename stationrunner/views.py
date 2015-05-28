@@ -137,20 +137,16 @@ class StationHome(View):
                                                 kwargs={'pk':pk},
                                             )
                                     )
+        else:
+            return HttpResponse("Form Invalid")
+
+    def delete(self, request, pk):
+        Station.objects.get(pk=pk).delete()
+        return HttpResponse()
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(StationHome, self).dispatch(*args, **kwargs)
-
-
-class StationDelete(View):
-    def get(self, request):
-        raise Http404
-
-    def post(self, request, pk):
-        Station.objects.get(pk=pk).delete()
-        return HttpResponseRedirect(
-            reverse("stations")                      
-            )
 
 class Members(View): 
     def get(self, request):

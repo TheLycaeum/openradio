@@ -592,7 +592,7 @@ class TestStationManagement(TestCase):
         station = Station.objects.create(owner=user)
         assert station in Station.objects.all()
         self.client.login(username=username,password=password)
-        self.client.post(reverse('delete_station',
+        self.client.delete(reverse('home_station',
                                  kwargs={'pk':station.pk}))
         assert station not in Station.objects.all()
 
