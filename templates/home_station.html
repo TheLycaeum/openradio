@@ -1,24 +1,33 @@
 <!DOCTYPE html>
-<html>
-
 <head>
-<!--  
-  <script src="jquery-1.11.3.js"></script>
+  {% load staticfiles %}
+  <script src="{% static "stationrunner/jquery-1.11.3.js" %}"></script>
+  <script src="{% static "stationrunner/jquery.cookie.js" %}"></script>
 
   <script>
     $(document).ready(function(){
-      $('#delete').submit.function(e){
+      var csrftoken = $.cookie('csrftoken');
+      function csrfSafeMethod(method) {
+        // these HTTP methods don't require CSRF protection
+        return(/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+      $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+          if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        }
+      });
+      $('#delete').submit(function(e){
         e.preventDefault();
-        var station_id = {{ station.id }}
         $.ajax({
             type: 'POST',
-            url: '/station/' + station_id,
-            headers: {'X_METHODOVERRIDE': 'DELETE'}
+            url: '{% url 'home_station' station.id %}',
+            headers: {'X-Methodoverride': 'DELETE'}
         });
       });
     });
   </script>
--->
 </head>
 
 <body>
@@ -59,7 +68,7 @@
   </form>
   
   <h3>Delete Station!</h3>
-  <form method="post" action="{% url 'delete_station' station.id %}">
+  <form method="post" id="delete" name="delete" action="">
     {% csrf_token %}
     <input type="submit" value="Delete" />
   </form>
