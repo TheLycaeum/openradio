@@ -5,7 +5,6 @@ from stationrunner.views import UserRegistration
 from stationrunner.views import UserHome
 from stationrunner.views import Stations
 from stationrunner.views import StationHome
-from stationrunner.views import StationDelete
 from stationrunner.views import Members
 from stationrunner.views import MemberRemove
 #from stationrunner.views import ChannelListCreate
@@ -30,7 +29,6 @@ urlpatterns = patterns('',
     url(r'^user/(?P<pk>\d+)$', UserHome.as_view(), name='userhome'),
     url(r'^stations$', Stations.as_view(), name='stations'),
     url(r'^station/(?P<pk>\d+)$', StationHome.as_view(), name='home_station'),
-    url(r'^station/(?P<pk>\d+)/delete$', StationDelete.as_view(), name='delete_station'),
     url(r'^station/(?P<pk>\d+)/members$', Members.as_view(), name='members'),
     url(r'^station/(?P<pk>\d+)/member/remove$', MemberRemove.as_view(), name='remove_member'),
     #url(r'^channels$', ChannelListCreate.as_view(), name='list_create_channel'),
