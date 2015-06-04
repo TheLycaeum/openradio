@@ -38,7 +38,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/home/afzalsh/logs/debug.log',
+            'filename': os.path.join(BASE_DIR,'logs/debug.log'),
         },
     },
     'loggers': {

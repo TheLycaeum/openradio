@@ -1,0 +1,88 @@
+Not Found: /accounts/profile/
+Not Found: /favicon.ico
+Internal Server Error: /audio_files
+Traceback (most recent call last):
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 111, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/views/generic/base.py", line 69, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/utils/decorators.py", line 29, in _wrapper
+    return bound_func(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/utils/decorators.py", line 25, in bound_func
+    return func.__get__(self, type(self))(*args2, **kwargs2)
+  File "/home/afzalsh/works/openradio/stationrunner/views.py", line 280, in dispatch
+    return super(AudioFiles, self).dispatch(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/views/generic/base.py", line 87, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/afzalsh/works/openradio/stationrunner/views.py", line 271, in post
+    audio_file.save()
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 589, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 617, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 698, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 731, in _do_insert
+    using=using, raw=raw)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/manager.py", line 92, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/query.py", line 921, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/sql/compiler.py", line 920, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 81, in execute
+    return super(CursorDebugWrapper, self).execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 65, in execute
+    return self.cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/utils.py", line 94, in __exit__
+    six.reraise(dj_exc_type, dj_exc_value, traceback)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 65, in execute
+    return self.cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/sqlite3/base.py", line 485, in execute
+    return Database.Cursor.execute(self, query, params)
+IntegrityError: NOT NULL constraint failed: stationrunner_audiofile.tags
+Internal Server Error: /audio_files
+Traceback (most recent call last):
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 111, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/views/generic/base.py", line 69, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/utils/decorators.py", line 29, in _wrapper
+    return bound_func(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/utils/decorators.py", line 25, in bound_func
+    return func.__get__(self, type(self))(*args2, **kwargs2)
+  File "/home/afzalsh/works/openradio/stationrunner/views.py", line 280, in dispatch
+    return super(AudioFiles, self).dispatch(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/views/generic/base.py", line 87, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/afzalsh/works/openradio/stationrunner/views.py", line 271, in post
+    audio_file.save()
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 589, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 617, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 698, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/base.py", line 731, in _do_insert
+    using=using, raw=raw)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/manager.py", line 92, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/query.py", line 921, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/models/sql/compiler.py", line 920, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 81, in execute
+    return super(CursorDebugWrapper, self).execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 65, in execute
+    return self.cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/utils.py", line 94, in __exit__
+    six.reraise(dj_exc_type, dj_exc_value, traceback)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/utils.py", line 65, in execute
+    return self.cursor.execute(sql, params)
+  File "/home/afzalsh/virtualenvs/openradio/local/lib/python2.7/site-packages/django/db/backends/sqlite3/base.py", line 485, in execute
+    return Database.Cursor.execute(self, query, params)
+IntegrityError: NOT NULL constraint failed: stationrunner_audiofile.tags
