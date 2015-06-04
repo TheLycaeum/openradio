@@ -5,7 +5,7 @@
   <script src="{% static "stationrunner/jquery.cookie.js" %}"></script>
 
   <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
       var csrftoken = $.cookie('csrftoken');
       function csrfSafeMethod(method) {
         // these HTTP methods don't require CSRF protection
@@ -18,12 +18,10 @@
           }
         }
       });
-      $('#delete').submit(function(e){
-        e.preventDefault();
+      $('#delete').click(function() {
         $.ajax({
-            type: 'POST',
+            type: 'DELETE',
             url: '{% url 'home_station' station.id %}',
-            headers: {'X-Methodoverride': 'DELETE'},
             success: function(response) {
               window.location.href = "{% url 'stations' %}"
             }
@@ -71,10 +69,7 @@
   </form>
   
   <h3>Delete Station!</h3>
-  <form method="post" id="delete" name="delete" action="">
-    {% csrf_token %}
-    <input type="submit" value="Delete" />
-  </form>
+  <button id="delete" name="delete">Delete</button>
 
   <a href="{% url 'userhome' user.pk %}"><h1>Home</h1></a>
 </body>

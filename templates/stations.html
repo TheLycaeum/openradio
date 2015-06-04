@@ -13,7 +13,9 @@
   <h1>Your Stations</h1>
   <ul>
     {% for station in stations %}
-      <li >{{ station }}</li> 
+      <li>
+	<a href="{% url 'home_station' station.id %}">{{ station }}</a>
+      </li> 
     {% empty %}
       <li>You have not created any stations yet!</li>
     {% endfor %}
