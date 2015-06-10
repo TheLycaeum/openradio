@@ -1,5 +1,14 @@
-<form action="{% url 'channels' %}" method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Create" />
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Channel Creation</title>
+</head>
+
+<body>
+  <form action="{% url 'channels' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create" />
+  </form>
+</body>
+</html>
