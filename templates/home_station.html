@@ -2,9 +2,9 @@
 <head>
   <title>Station Home</title>
   {% load staticfiles %}
-  <script src="{% static "stationrunner/jquery-1.11.3.js" %}"></script>
-  <script src="{% static "stationrunner/jquery.cookie.js" %}"></script>
-
+  <script src="{% static 'jquery-1.11.3.js' %}"></script>
+  <script src="{% static 'jquery.cookie.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'or_style.css' %}">
   <script>
     $(document).ready(function() {
       var csrftoken = $.cookie('csrftoken');
